@@ -1,3 +1,3 @@
 Mini app leaflet
 
-Je n'ai pas rédigé ce document encore.
+Je n'ai pas encore rédigé le Readme car ça n'est pas utile pour le moment.
