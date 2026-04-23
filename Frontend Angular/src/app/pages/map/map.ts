@@ -1,5 +1,7 @@
 import { AfterViewInit, Component } from '@angular/core';
 import * as L from 'leaflet';
+import { FormulairePoint } from '../../components/formulaire-point/formulaire-point';
+import { MatDialog } from '@angular/material/dialog';
 
 // code nécéssaire pour avoir le chemin correct des icones de Leaflet dans la carte :
 // suppression des chemins des icones définis par défaut dans Leaflet qui sont incorrect avec Angular : 
@@ -13,15 +15,15 @@ L.Icon.Default.mergeOptions({
 });
 
 
-
-
 @Component({
   selector: 'app-map',
-  imports: [],
+  imports: [FormulairePoint],
   templateUrl: './map.html',
   styleUrl: './map.scss', 
 })
 export class Map implements AfterViewInit {
+
+  constructor(private matDialog: MatDialog){}
 
   // propriété de type L.Map qui est le type dans Leaflet pour afficher la carte:
   maCarte!: L.Map;
@@ -56,6 +58,8 @@ export class Map implements AfterViewInit {
 
 
     this.maCarte.on("click", (evenementLeflet: L.LeafletMouseEvent)=>{
+
+      this.matDialog.open(FormulairePoint);
 
       pointLatitude = evenementLeflet.latlng.lat;
       pointLongitude = evenementLeflet.latlng.lng;
