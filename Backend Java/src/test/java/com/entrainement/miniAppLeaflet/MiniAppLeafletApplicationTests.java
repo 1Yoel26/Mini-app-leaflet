@@ -1,10 +1,10 @@
-package com.site_apprentissage.app_cartographie;
+package com.entrainement.miniAppLeaflet;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class AppCartographieApplicationTests {
+class MiniAppLeafletApplicationTests {
 
 	@Test
 	void contextLoads() {

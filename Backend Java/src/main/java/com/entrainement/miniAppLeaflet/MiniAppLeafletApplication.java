@@ -1,13 +1,13 @@
-package com.site_apprentissage.app_cartographie;
+package com.entrainement.miniAppLeaflet;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class AppCartographieApplication {
+public class MiniAppLeafletApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(AppCartographieApplication.class, args);
+		SpringApplication.run(MiniAppLeafletApplication.class, args);
 	}
 
 }
