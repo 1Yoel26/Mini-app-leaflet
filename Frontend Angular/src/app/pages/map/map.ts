@@ -2,6 +2,7 @@ import { AfterViewInit, Component } from '@angular/core';
 import * as L from 'leaflet';
 import { FormulairePoint } from '../../components/formulaire-point/formulaire-point';
 import { MatDialog } from '@angular/material/dialog';
+import { ServiceCouche } from '../../services/service-couche';
 
 // code nécéssaire pour avoir le chemin correct des icones de Leaflet dans la carte :
 // suppression des chemins des icones définis par défaut dans Leaflet qui sont incorrect avec Angular : 
@@ -23,7 +24,10 @@ L.Icon.Default.mergeOptions({
 })
 export class Map implements AfterViewInit {
 
-  constructor(private matDialog: MatDialog){}
+  constructor(
+    private matDialog: MatDialog,
+    private serviceCouche: ServiceCouche
+  ){}
 
   // propriété de type L.Map qui est le type dans Leaflet pour afficher la carte:
   maCarte!: L.Map;
@@ -48,6 +52,17 @@ export class Map implements AfterViewInit {
     // ajout des tuiles de la carte du monde en fond d'écran de la carte Leaflet: 
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(this.maCarte);
     
+  }
+
+  // fonction pour ajouter une couche depuis la bdd:
+  ajouterUneCouche(): void{
+
+    this.serviceCouche.recupereUneCouche().subscribe( (dataDeLaCouche)=>{
+
+      
+
+    });
+
   }
 
 
