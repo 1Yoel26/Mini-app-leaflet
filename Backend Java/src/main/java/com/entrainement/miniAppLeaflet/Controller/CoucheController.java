@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,9 +28,17 @@ public class CoucheController {
 	
 	
 	@GetMapping("")
-	public List<Map<String, Object>> getUneCouche(){
+	public List<List<Map<String, Object>>> getAllCouches(){
 		
-		return coucheService.getCouche("couche2_chutes_niagara");
+		return coucheService.getAllcouches();
+		
+	}
+	
+	
+	@GetMapping("/{nomDeLaCouche}")
+	public List<Map<String, Object>> getUneCouche(@PathVariable String nomDeLaCouche){
+		
+		return coucheService.getCouche(nomDeLaCouche);
 		
 	}
 

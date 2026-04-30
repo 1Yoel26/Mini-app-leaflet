@@ -24,7 +24,7 @@ export class ServiceLeaflet {
   afficherLaCarte(idDivConteneur: string): L.Map {
 
     // création de la carte pointé sur les chutes du Niagara par défaut:
-    const maCarte: L.Map = L.map(idDivConteneur).setView([43.0799, -79.0747], 15);
+    const maCarte: L.Map = L.map(idDivConteneur).setView([43.0799, -79.0747], 16);
 
     // ajout des tuiles de la carte du monde en fond d'écran de la carte Leaflet: 
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(maCarte);
@@ -36,10 +36,10 @@ export class ServiceLeaflet {
 
 
   // Fonction 2 :
-  // pour ajouter une couche sur la carte leaflet, depuis la bdd:
-  ajouterUneCouche(maCarte: L.Map): void{
+  // pour récupérer et ajouter une couche sur la carte leaflet, depuis la bdd:
+  recupererEtAfficherUneCouche(nomDeLaCouche: string, maCarte: L.Map): void{
 
-    this.serviceCouche.recupereUneCouche().subscribe( (listeDesMapsDeLaCouche)=>{
+    this.serviceCouche.recupereUneCouche(nomDeLaCouche).subscribe( (listeDesMapsDeLaCouche)=>{
 
       // récupération uniquement de la propriété .geomgeojson
       // puis la convertir avec le JSON.parse()
@@ -48,6 +48,7 @@ export class ServiceLeaflet {
         return JSON.parse(proprieteDeLaCouche.geomgeojson);
       })
 
+      // création de la couche à ajouter, puis ajout de cette couche sur la carte
       const coucheCreer = L.geoJSON(contenuJsonDeGeomJson, {
         style: {
           color: 'blue',
@@ -62,7 +63,53 @@ export class ServiceLeaflet {
 
   }
 
+
+
+
+  
+
   // Fonction 3 :
+  // pour recuperer et ajouter toutes les couches/tables sur la carte leaflet, depuis la bdd:
+  ajouterToutesLesCouches(maCarte: L.Map): void{
+
+    this.serviceCouche.recuperetoutesLesCouche().subscribe(
+      (listeDeToutesLesCouches: any[][])=>{
+
+        // recupération d'une seule couche/table à la fois :
+        for(const uneCouche of listeDeToutesLesCouches){
+
+          // boucle sur chaque objet/ligne dans une couche/table
+          for(const unObjetGeometrique of uneCouche){
+
+            const objetGeometriqueStringConvertitEnJson = JSON.parse(unObjetGeometrique.geomgeojson);
+            const coucheCrer : L.Layer = L.geoJSON(objetGeometriqueStringConvertitEnJson, {
+              style : {
+                color: 'red',
+                fillColor: 'blue',
+                weight: 2,
+                fillOpacity: 0.5
+              }
+            });
+
+            coucheCrer.bindTooltip("Lieux", {
+              permanent: true,
+              direction: 'center'
+            });
+
+            coucheCrer.addTo(maCarte);
+
+          }
+
+
+        }
+
+      }
+    );
+
+  }
+
+
+  // Fonction 4 :
   // pour récupérer la zonne cliqué sur la carte, et y ajouter
   // un point sur la carte à cet endroit + un formulaire de description pour l'utilisateur :
   recupererLePoint(maCarte: L.Map, matDialog: MatDialog): void{
@@ -86,6 +133,9 @@ export class ServiceLeaflet {
     })
 
   }
+
+
+
 
 
 }

@@ -1,5 +1,6 @@
 package com.entrainement.miniAppLeaflet.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -46,6 +47,24 @@ public class CoucheService {
 		
 		return listeDesObjetsDuneCouche;
 		
+	}
+	
+	
+	public List<List<Map<String, Object>>> getAllcouches(){
+		
+		List<String> listeDesNomsDesCouches = getTables();
+		
+		List<List<Map<String, Object>>> listeAvecToutesLesCouches = new ArrayList<List<Map<String,Object>>>();
+		
+		for(String nomDuneCouche: listeDesNomsDesCouches) {
+			
+			List<Map<String, Object>> uneCouche = getCouche(nomDuneCouche);
+			
+			listeAvecToutesLesCouches.add(uneCouche);
+			
+		}
+		
+		return listeAvecToutesLesCouches;
 	}
 
 	

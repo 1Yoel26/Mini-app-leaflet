@@ -31,7 +31,7 @@ export class Map implements AfterViewInit {
   ){}
 
   // propriété de type L.Map qui est le type dans Leaflet pour afficher la carte:
-  maCarte!: L.Map;
+  private maCarte!: L.Map;
 
   // charger la carte Leaflet, uniquement une fois que le DOM Html est chargé (car Leaflet à besoin du DOM Html)
   ngAfterViewInit(): void {
@@ -42,8 +42,14 @@ export class Map implements AfterViewInit {
     // appel de la fonction pour récuperer le point cliqué par l'utilisateur:
     this.serviceLeaflet.recupererLePoint(this.maCarte, this.matDialog)
 
-    // appel de la fonction pour ajouter une couche depuis PostgreSQL
-    this.serviceLeaflet.ajouterUneCouche(this.maCarte);
+    // appel de la fonction pour récuperer et ajouter une couche depuis PostgreSQL
+    //this.serviceLeaflet.recupererEtAfficherUneCouche("couche1_apprentissage_api", this.maCarte);
+
+    // appel de la fonction pour ajouter automatiquement toutes les couches de la Bdd sur la carte Leaflet:
+    this.serviceLeaflet.ajouterToutesLesCouches(this.maCarte);
+
+
+   
 
   }
 
