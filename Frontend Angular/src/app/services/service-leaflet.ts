@@ -3,6 +3,7 @@ import * as L from 'leaflet';
 import { ServiceCouche } from './service-couche';
 import { MatDialog } from '@angular/material/dialog';
 import { FormulairePoint } from '../components/formulaire-point/formulaire-point';
+import { ServicePointsStorage } from './service-points-storage';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +16,8 @@ export class ServiceLeaflet {
   // appel du : ServiceCouche, dans : ServiceLeaflet, 
   // pour par exemple récuperer une couche de la Bdd:
   constructor(
-        private serviceCouche: ServiceCouche
+        private serviceCouche: ServiceCouche,
+        private servicePointsStorage: ServicePointsStorage
   ){}
 
 
@@ -62,9 +64,6 @@ export class ServiceLeaflet {
     });
 
   }
-
-
-
 
   
 
@@ -127,8 +126,13 @@ export class ServiceLeaflet {
       pointLatitude = evenementLeflet.latlng.lat;
       pointLongitude = evenementLeflet.latlng.lng;
 
+      // stockage du point cliqué dans le service servicePointsStorage,
+      // pour pouvoir l'ajouter sur la carte après enregistrement en Bdd du commentaire dessus:
+
+      this.servicePointsStorage.setPoints(pointLatitude, pointLongitude);
+
       // ajout du point sur la carte Leaflet:
-      L.marker([pointLatitude, pointLongitude]).addTo(maCarte);
+      //L.marker([pointLatitude, pointLongitude]).addTo(maCarte);
 
     })
 
