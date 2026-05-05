@@ -49,6 +49,8 @@ export class Map implements AfterViewInit {
     this.serviceLeaflet.ajouterToutesLesCouches(this.maCarte);
 
 
+    // appel de la fonction pour ajouter la couche avec les points cliqués sur la carte:
+    //this.serviceLeaflet.recupererEtAfficherLaCoucheAvecLesPointsEtDescriptions(this.maCarte);
    
 
   }

@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { PointAndDescriptionDto } from '../interfaces/point-and-description-dto';
 
 @Injectable({
   providedIn: 'root',
@@ -32,6 +33,20 @@ export class ServiceCouche {
 
     return this.httpClient.get<any[]>(this.cheminHttp + "/" + nomDeLaCouche);
 
+  }
+
+
+  // service qui récupere la couche avec les points cliqué des utilisateurs sous forme de liste any[] pour la liste de Map<String, Object> envoyé par l'API Java
+  public recupereLaCouchePointAndDescription() : Observable<any[]> {
+
+    return this.httpClient.get<any[]>(this.cheminHttp + "/getCouchePoints");
+
+  }
+
+  
+  // service qui enregistre le point + la description en Bdd:
+  public enregistrementFormulaireEnBdd(infosPointAndDescription: PointAndDescriptionDto): Observable<void>{
+    return this.httpClient.post<void>(this.cheminHttp + "/saveNewPointAndDescription", infosPointAndDescription);
   }
 
 }

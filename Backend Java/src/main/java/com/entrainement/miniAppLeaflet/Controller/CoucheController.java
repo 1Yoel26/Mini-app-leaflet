@@ -8,8 +8,11 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.entrainement.miniAppLeaflet.dto.DtoPointAndDescription;
 
 import com.entrainement.miniAppLeaflet.service.CoucheService;
 
@@ -46,9 +49,28 @@ public class CoucheController {
 	
 	
 	@PostMapping("/saveNewPointAndDescription") 
-	public void savePointAndDescription() {
+	public void savePointAndDescription(@RequestBody DtoPointAndDescription dtoPointAndDescription) {
 		
-		System.out.println("Appel save new point and description reussi");
+		// appel de la fonction qui sauvegarde la description + le point en Bdd:
+		
+		double coordonneePointLongitude = dtoPointAndDescription.getCoordonneePointLongitude();
+		
+		double coordonneePointLatitude = dtoPointAndDescription.getCoordonneePointLatitude();
+		
+		String description = dtoPointAndDescription.getDescription();
+		
+		System.out.println(coordonneePointLongitude + " " + coordonneePointLatitude);
+		
+		coucheService.savePointAndDescription(coordonneePointLongitude, coordonneePointLatitude, description);
+	}
+	
+	
+	
+	@GetMapping("/getCouchePoints")
+	public List<Map<String, Object>> getCouchePointAndDescriptionUser(){
+		
+		return coucheService.getCouchePoints();
+		
 	}
 
 }

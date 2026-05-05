@@ -13,7 +13,7 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "pointAndDescriptionUser")
+@Table(name = "\"pointAndDescriptionUser\"", schema = "public") 
 @Data
 public class PointAndDescription {
 	
@@ -21,8 +21,8 @@ public class PointAndDescription {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(columnDefinition = "geometrie(Point, 4326)")
-	private Point geometry;
+	@Column(columnDefinition = "geometry(Point, 4326)")
+	private Point geom;
 	
 	private String description;
 	

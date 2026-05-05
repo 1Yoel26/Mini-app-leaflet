@@ -8,19 +8,20 @@ import { Injectable } from '@angular/core';
 // afin de pouvoir partager ces informations entre les components de l'app:
 export class ServicePointsStorage {
 
-  private coordonneeLatitude!: number;
   private coordonneeLongitude!: number;
+  private coordonneeLatitude!: number;
 
-  public setPoints(latitude: number, longitude: number) :void{
-    this.coordonneeLatitude = latitude;
+  public setPoints(longitude: number, latitude: number) :void{
     this.coordonneeLongitude = longitude;
+    this.coordonneeLatitude = latitude;
   }
 
-  public getPoints(): {latitude: number, longitude: number} {
+  public getPoints(): {longitude: number, latitude: number, } {
 
     return {
-      latitude : this.coordonneeLatitude,
-      longitude: this.coordonneeLongitude
+      longitude: this.coordonneeLongitude,
+      latitude : this.coordonneeLatitude
     };
   }
+
 }

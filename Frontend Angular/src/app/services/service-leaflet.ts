@@ -17,7 +17,7 @@ export class ServiceLeaflet {
   // pour par exemple récuperer une couche de la Bdd:
   constructor(
         private serviceCouche: ServiceCouche,
-        private servicePointsStorage: ServicePointsStorage
+        private servicePointsLocalStorage: ServicePointsStorage
   ){}
 
 
@@ -68,7 +68,7 @@ export class ServiceLeaflet {
   
 
   // Fonction 3 :
-  // pour recuperer et ajouter toutes les couches/tables sur la carte leaflet, depuis la bdd:
+  // pour recuperer et ajouter automatiquement toutes les couches/tables sur la carte leaflet, depuis la bdd:
   ajouterToutesLesCouches(maCarte: L.Map): void{
 
     this.serviceCouche.recuperetoutesLesCouche().subscribe(
@@ -99,7 +99,6 @@ export class ServiceLeaflet {
 
           }
 
-
         }
 
       }
@@ -123,22 +122,17 @@ export class ServiceLeaflet {
       matDialog.open(FormulairePoint);
 
       // récupération des coordonnées du point cliqué
-      pointLatitude = evenementLeflet.latlng.lat;
       pointLongitude = evenementLeflet.latlng.lng;
+      pointLatitude = evenementLeflet.latlng.lat;
 
       // stockage du point cliqué dans le service servicePointsStorage,
       // pour pouvoir l'ajouter sur la carte après enregistrement en Bdd du commentaire dessus:
+      this.servicePointsLocalStorage.setPoints(pointLongitude, pointLatitude);
 
-      this.servicePointsStorage.setPoints(pointLatitude, pointLongitude);
-
-      // ajout du point sur la carte Leaflet:
-      //L.marker([pointLatitude, pointLongitude]).addTo(maCarte);
 
     })
 
   }
-
-
 
 
 

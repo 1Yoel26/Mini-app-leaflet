@@ -2,10 +2,10 @@
 // du formulaire avec la zonne cliqué par l'utilisateur 
 // + sa description dessus:
 
-export interface PointAndDescription {
+export interface PointAndDescriptionDto {
 
-    coordonneeLatitude: number;
     coordonneeLongitude: number;
+    coordonneeLatitude: number;
     description: string;
 
 }
