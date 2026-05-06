@@ -2,8 +2,10 @@ import { AfterViewInit, Component } from '@angular/core';
 import * as L from 'leaflet';
 import { FormulairePoint } from '../../components/formulaire-point/formulaire-point';
 import { MatDialog } from '@angular/material/dialog';
-import { ServiceCouche } from '../../services/service-couche';
-import { ServiceLeaflet } from '../../services/service-leaflet';
+import { ServiceLeaflet } from '../../services/services-metier/service-leaflet';
+import { ServicePointsStorage } from '../../services/services-stockage/service-points-storage';
+import { ServiceEventSubject } from '../../services/services-event/service-event-subject';
+import { NewPointAdd } from '../../interfaces/new-point-add';
 
 // code nécéssaire pour avoir le chemin correct des icones de Leaflet dans la carte :
 // suppression des chemins des icones définis par défaut dans Leaflet qui sont incorrect avec Angular : 
@@ -19,7 +21,7 @@ L.Icon.Default.mergeOptions({
 
 @Component({
   selector: 'app-map',
-  imports: [FormulairePoint],
+  imports: [],
   templateUrl: './map.html',
   styleUrl: './map.scss', 
 })
@@ -27,7 +29,9 @@ export class Map implements AfterViewInit {
 
   constructor(
     private matDialog: MatDialog,
-    private serviceLeaflet: ServiceLeaflet
+    private serviceLeaflet: ServiceLeaflet,
+    private servicePointsStorage: ServicePointsStorage,
+    private serviceEventSubject : ServiceEventSubject
   ){}
 
   // propriété de type L.Map qui est le type dans Leaflet pour afficher la carte:
@@ -39,8 +43,10 @@ export class Map implements AfterViewInit {
     // appel de la fonction pour retourner et afficher la carte Leaflet:
     this.maCarte = this.serviceLeaflet.afficherLaCarte("divMaCarte");
 
-    // appel de la fonction pour récuperer le point cliqué par l'utilisateur:
-    this.serviceLeaflet.recupererLePoint(this.maCarte, this.matDialog)
+    // appel de la fonction pour : 
+    // - récuperer le point cliqué par l'utilisateur
+    // - et afficher une popup avec le formulaire de description dessus :
+    this.serviceLeaflet.recupererLePointCliquer(this.maCarte, this.matDialog)
 
     // appel de la fonction pour récuperer et ajouter une couche depuis PostgreSQL
     //this.serviceLeaflet.recupererEtAfficherUneCouche("couche1_apprentissage_api", this.maCarte);
@@ -50,8 +56,26 @@ export class Map implements AfterViewInit {
 
 
     // appel de la fonction pour ajouter la couche avec les points cliqués sur la carte:
-    //this.serviceLeaflet.recupererEtAfficherLaCoucheAvecLesPointsEtDescriptions(this.maCarte);
-   
+    this.serviceLeaflet.recupererEtAfficherLaCoucheAvecLesPointsCliquer(this.maCarte);
+    
+
+    // à chaque ajout d'un point par l'utilisateur, 
+    // ajout de ce point via le servicePointStorage et le serviceEventSubject :
+
+    this.serviceEventSubject.notifAddPointObservable$.subscribe(
+
+      (newPointAdd: NewPointAdd)=>{
+        const coordonneeLongitude: number = newPointAdd.coordonneLongitude;
+        const coordonneeLatitude: number = newPointAdd.coordonneLatitude;
+
+        this.serviceLeaflet.ajouterUnPoint(coordonneeLongitude, coordonneeLatitude, this.maCarte);
+      }
+
+    );
+
+    
+    
+
 
   }
 

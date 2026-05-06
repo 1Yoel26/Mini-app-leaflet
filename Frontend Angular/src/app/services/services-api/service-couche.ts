@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { PointAndDescriptionDto } from '../interfaces/point-and-description-dto';
+import { PointAndDescriptionDto } from '../../interfaces/point-and-description-dto';
 
 @Injectable({
   providedIn: 'root',

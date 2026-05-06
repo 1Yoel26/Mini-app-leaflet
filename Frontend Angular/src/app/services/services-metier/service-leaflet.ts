@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import * as L from 'leaflet';
-import { ServiceCouche } from './service-couche';
-import { MatDialog } from '@angular/material/dialog';
-import { FormulairePoint } from '../components/formulaire-point/formulaire-point';
-import { ServicePointsStorage } from './service-points-storage';
+import { ServiceCouche } from '../services-api/service-couche';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { FormulairePoint } from '../../components/formulaire-point/formulaire-point';
+import { ServicePointsStorage } from '../services-stockage/service-points-storage';
 
 @Injectable({
   providedIn: 'root',
@@ -90,10 +90,6 @@ export class ServiceLeaflet {
               }
             });
 
-            coucheCrer.bindTooltip("Lieux", {
-              permanent: true,
-              direction: 'center'
-            });
 
             coucheCrer.addTo(maCarte);
 
@@ -108,9 +104,12 @@ export class ServiceLeaflet {
 
 
   // Fonction 4 :
-  // pour récupérer la zonne cliqué sur la carte, et y ajouter
-  // un point sur la carte à cet endroit + un formulaire de description pour l'utilisateur :
-  recupererLePoint(maCarte: L.Map, matDialog: MatDialog): void{
+  // pour : 
+  // - récupérer la zonne cliqué sur la carte au moment du clic
+  // - stocker les coordonnées de ce point ensuite dans le ServicePointsStorage
+  // - et afficher une popup avec un formulaire de description pour l'utilisateur :
+  
+  recupererLePointCliquer(maCarte: L.Map, matDialog: MatDialog): void{
 
     let pointLatitude: number;
     let pointLongitude: number;
@@ -133,6 +132,47 @@ export class ServiceLeaflet {
     })
 
   }
+
+
+  // Fonction 5 :
+  // pour : 
+  // - récupérer la couche avec tous les points cliqués
+  // - ajouter cette couche à la carte Leaflet
+  
+  recupererEtAfficherLaCoucheAvecLesPointsCliquer(maCarte: L.Map): void {
+
+    this.serviceCouche.recupereLaCouchePointAndDescription().subscribe(
+      (laCoucheDesPoints: any[])=>{
+        for(let uneCoucheDePoint of laCoucheDesPoints){
+
+          // conversion de l'objet string en objet Json compatible avec GeoJson
+          const objetGeometriqueStringConvertitEnJson = JSON.parse(uneCoucheDePoint.geomgeojson);
+          
+          // création de la couche avec les points + ajout sur la carte Leaflet:
+          L.geoJSON(objetGeometriqueStringConvertitEnJson, {
+            // ajout de la description en etiquette sur chaque point de la couche:
+            
+          }).addTo(maCarte);
+
+
+        }
+      }
+    );
+
+  }
+
+
+  // Fonction 6 : 
+  // pour ajouter le nouveau point directement sur la carte de l'utilisateur (sans avoir besoin de le charger de la Bdd):
+  ajouterUnPoint(coordonneeLongitude: number, coordonneeLatitude: number, maCarte: L.Map): void{
+
+    L.marker([coordonneeLatitude, coordonneeLongitude]).addTo(maCarte);
+
+  }
+
+
+
+  
 
 
 
