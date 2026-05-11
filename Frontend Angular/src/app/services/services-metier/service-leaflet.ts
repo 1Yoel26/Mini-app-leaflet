@@ -4,6 +4,7 @@ import { ServiceCouche } from '../services-api/service-couche';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FormulairePoint } from '../../components/formulaire-point/formulaire-point';
 import { ServicePointsStorage } from '../services-stockage/service-points-storage';
+import { ServiceExtraitDescription } from './service-extrait-description';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +18,8 @@ export class ServiceLeaflet {
   // pour par exemple récuperer une couche de la Bdd:
   constructor(
         private serviceCouche: ServiceCouche,
-        private servicePointsLocalStorage: ServicePointsStorage
+        private servicePointsLocalStorage: ServicePointsStorage,
+        private serviceExtraitDescription : ServiceExtraitDescription
   ){}
 
 
@@ -143,14 +145,39 @@ export class ServiceLeaflet {
 
     this.serviceCouche.recupereLaCouchePointAndDescription().subscribe(
       (laCoucheDesPoints: any[])=>{
-        for(let uneCoucheDePoint of laCoucheDesPoints){
+        for(let unPointStringSql of laCoucheDesPoints){
 
           // conversion de l'objet string en objet Json compatible avec GeoJson
-          const objetGeometriqueStringConvertitEnJson = JSON.parse(uneCoucheDePoint.geomgeojson);
+          const unPointStringConvertitEnJson = JSON.parse(unPointStringSql.geomgeojson);
+
+          // Transformation de la description longues, en extrait, 
+          // pour pouvoir ensuite l'ajouter en étiquette sur chacun des points sur la carte:
+          let extraitDescriptionDunPoint: string = this.serviceExtraitDescription.transformationDescriptionEnExtrait(unPointStringSql.description);
           
+
           // création de la couche avec les points + ajout sur la carte Leaflet:
-          L.geoJSON(objetGeometriqueStringConvertitEnJson, {
-            // ajout de la description en etiquette sur chaque point de la couche:
+          L.geoJSON(unPointStringConvertitEnJson, {
+            
+            // Ajout de l'extrait de la description, ainsi que de la description complète,
+            // sur chaque point de la couche:
+            onEachFeature(feature, unMarker) {
+
+              // ajout de l'extrait de la description en etiquette sur chaque point
+              // de la couche:
+              unMarker.bindTooltip(
+                extraitDescriptionDunPoint,
+                {
+                  permanent: true
+                }
+              );
+
+              // et ajout d'une popup avec la description complète 
+              // qui s'affiche lors du clic sur un des points:
+              unMarker.bindPopup(
+                unPointStringSql.description
+              );
+              
+            },
             
           }).addTo(maCarte);
 

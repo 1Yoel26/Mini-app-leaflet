@@ -40,6 +40,7 @@ export class Map implements AfterViewInit {
   // charger la carte Leaflet, uniquement une fois que le DOM Html est chargé (car Leaflet à besoin du DOM Html)
   ngAfterViewInit(): void {
 
+
     // appel de la fonction pour retourner et afficher la carte Leaflet:
     this.maCarte = this.serviceLeaflet.afficherLaCarte("divMaCarte");
 

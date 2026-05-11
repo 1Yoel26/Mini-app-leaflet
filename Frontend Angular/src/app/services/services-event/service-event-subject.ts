@@ -11,7 +11,8 @@ export class ServiceEventSubject {
 
   public notifAddPointObservable$ : Observable<NewPointAdd> = this.notifAddPointSubject.asObservable();
 
-  public notifAddNewPoint(newPoint: NewPointAdd): void{
+  
+  notifAddNewPoint(newPoint: NewPointAdd): void{
 
     this.notifAddPointSubject.next(newPoint);
 

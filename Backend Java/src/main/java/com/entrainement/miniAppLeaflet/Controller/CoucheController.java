@@ -38,7 +38,7 @@ public class CoucheController {
 		
 	}
 	
-	
+	// A modifier en production pour sécuriser le paramètre du nomDeLaCouche
 	@GetMapping("/{nomDeLaCouche}")
 	public List<Map<String, Object>> getUneCouche(@PathVariable String nomDeLaCouche){
 		
