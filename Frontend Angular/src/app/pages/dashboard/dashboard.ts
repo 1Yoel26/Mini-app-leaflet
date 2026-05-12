@@ -1,10 +1,12 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
 import { ServiceCouche } from '../../services/services-api/service-couche';
 import { MatTable } from '@angular/material/table';
+import { CommonModule } from '@angular/common';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
@@ -14,18 +16,15 @@ export class Dashboard implements OnInit{
     private serviceCouche: ServiceCouche
   ){}
 
-  public laCoucheDesPoints!: any[];
+  public laCoucheDesPoints!: Observable<any>;
 
 
   ngOnInit(): void {
 
-    this.serviceCouche.recupereLaCouchePointAndDescription().subscribe(
-      (coucheDesPoints)=>{
-        this.laCoucheDesPoints = coucheDesPoints;
-      }
-    );
-    
-  }
+  this.laCoucheDesPoints = this.serviceCouche.recupereLaCouchePointAndDescription();
+
+
+}
 
   
 

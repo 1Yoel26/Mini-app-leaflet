@@ -1,19 +1,23 @@
-<h1>Dashboard  {{laCoucheDesPoints.length}}</h1>
+<table class="styled-table">
 
-<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Description des utilisateurs</th>
+      <th>Infos géographiques (GeoJSON)</th>
+    </tr>
+  </thead>
 
-    <tbody>
+  <tbody>
 
-        @for (unPoint of laCoucheDesPoints; track $index) {
-            
-            <tr> 
-                <td>unPoint</td>
-            </tr>
-        }
-        
-    </tbody>
+    @for (unPoint of (laCoucheDesPoints | async); track unPoint.id) {
+      <tr>
+        <td>{{ unPoint.id }}</td>
+        <td>{{ unPoint.description }}</td>
+        <td class="geo">{{ unPoint.geomgeojson }}</td>
+      </tr>
+    }
+
+  </tbody>
 
 </table>
-
-----------------------------------
-<p>{{laCoucheDesPoints}}</p>
