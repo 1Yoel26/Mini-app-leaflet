@@ -1,7 +1,5 @@
 .styled-table {
-  width: 80%;
   margin: auto;
-  margin-top: 50px;
   border-collapse: collapse;
   font-family: Arial, sans-serif;
   background: white;
@@ -31,6 +29,7 @@
 .styled-table tbody tr:hover {
   background-color: rgba(66, 165, 245, 0.1);
   transition: 0.2s ease;
+  cursor: pointer;
 }
 
 .geo {

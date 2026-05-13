@@ -5,6 +5,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FormulairePoint } from '../../components/formulaire-point/formulaire-point';
 import { ServicePointsStorage } from '../services-stockage/service-points-storage';
 import { ServiceExtraitDescription } from './service-extrait-description';
+import { NewPointAdd } from '../../interfaces/new-point-add';
 
 @Injectable({
   providedIn: 'root',
@@ -92,12 +93,13 @@ export class ServiceLeaflet {
               }
             });
 
-
             coucheCrer.addTo(maCarte);
 
           }
 
         }
+
+        
 
       }
     );
@@ -200,6 +202,18 @@ export class ServiceLeaflet {
 
 
   
+  // Fonction 7 :
+  // Qui zoom sur un poin précis dans la carte:
+
+  zoomSurUnPoint(maCarte: L.Map, coordonneesPoint: NewPointAdd | null):void{
+
+    if(coordonneesPoint){
+      
+      maCarte.flyTo([coordonneesPoint.coordonneLatitude, coordonneesPoint.coordonneLongitude], 18)
+
+    }
+    
+  }
 
 
 

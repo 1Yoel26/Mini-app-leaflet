@@ -11,7 +11,7 @@
   <tbody>
 
     @for (unPoint of (laCoucheDesPoints | async); track unPoint.id) {
-      <tr>
+      <tr (click)="serviceRecuperationClicDashboard.recuperationLigneCliquer(unPoint.geomgeojson)">
         <td>{{ unPoint.id }}</td>
         <td>{{ unPoint.description }}</td>
         <td class="geo">{{ unPoint.geomgeojson }}</td>

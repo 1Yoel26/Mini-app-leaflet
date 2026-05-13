@@ -50,7 +50,7 @@ public class CoucheService {
 		List<Map<String, Object>> listeDesObjetsDuneCouche;
 		
 		String sql = """
-				SELECT *, ST_AsGeoJSON(geom) AS geomGeoJson
+				SELECT *, ST_AsGeoJSON(ST_Transform(geom, 4326)) AS geomGeoJson
 				FROM schema_mini_app_leaflet.
 			""" + nomTable;
 		
@@ -116,7 +116,7 @@ public class CoucheService {
 		pointAndDescription.setGeom(pointCreer);
 		pointAndDescription.setDescription(description);
 		
-		System.out.println(pointAndDescription.getGeom());
+		
 		
 		//enregistrement en Bdd via JPA :
 		repositoryPointAndDescription.save(pointAndDescription);

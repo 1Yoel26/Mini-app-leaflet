@@ -6,6 +6,7 @@ import { ServiceLeaflet } from '../../services/services-metier/service-leaflet';
 import { ServicePointsStorage } from '../../services/services-stockage/service-points-storage';
 import { ServiceEventSubject } from '../../services/services-event/service-event-subject';
 import { NewPointAdd } from '../../interfaces/new-point-add';
+import { ServiceEventClicDashboard } from '../../services/services-event/service-clic-dashboard';
 
 // code nécéssaire pour avoir le chemin correct des icones de Leaflet dans la carte :
 // suppression des chemins des icones définis par défaut dans Leaflet qui sont incorrect avec Angular : 
@@ -31,7 +32,8 @@ export class Map implements AfterViewInit {
     private matDialog: MatDialog,
     private serviceLeaflet: ServiceLeaflet,
     private servicePointsStorage: ServicePointsStorage,
-    private serviceEventSubject : ServiceEventSubject
+    private serviceEventSubject : ServiceEventSubject,
+    private serviceEventClicDashboard: ServiceEventClicDashboard
   ){}
 
   // propriété de type L.Map qui est le type dans Leaflet pour afficher la carte:
@@ -72,6 +74,13 @@ export class Map implements AfterViewInit {
         this.serviceLeaflet.ajouterUnPoint(coordonneeLongitude, coordonneeLatitude, this.maCarte);
       }
 
+    );
+
+
+    this.serviceEventClicDashboard.notifClicDashboard$.subscribe(
+      (tableauCoordonneesPoint: NewPointAdd | null)=>{
+        this.serviceLeaflet.zoomSurUnPoint(this.maCarte, tableauCoordonneesPoint);
+      }
     );
 
     

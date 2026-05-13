@@ -2,7 +2,10 @@
 
 #divMaCarte{
     width: 100%;
-    height: 550px;
+    height: 440px;
     margin: auto;
     background-color: cornflowerblue;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
 }
