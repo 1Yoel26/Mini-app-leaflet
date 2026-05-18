@@ -7,6 +7,7 @@ import { ServicePointsStorage } from '../../services/services-stockage/service-p
 import { ServiceEventSubject } from '../../services/services-event/service-event-subject';
 import { NewPointAdd } from '../../interfaces/new-point-add';
 import { ServiceEventClicDashboard } from '../../services/services-event/service-clic-dashboard';
+import { FiltreMap } from '../../components/filtre-map/filtre-map';
 
 // code nécéssaire pour avoir le chemin correct des icones de Leaflet dans la carte :
 // suppression des chemins des icones définis par défaut dans Leaflet qui sont incorrect avec Angular : 
@@ -22,7 +23,7 @@ L.Icon.Default.mergeOptions({
 
 @Component({
   selector: 'app-map',
-  imports: [],
+  imports: [FiltreMap],
   templateUrl: './map.html',
   styleUrl: './map.scss', 
 })

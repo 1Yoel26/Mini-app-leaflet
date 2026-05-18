@@ -28,18 +28,28 @@ export class ServiceCouche {
   }
 
 
+
   // service qui récupere une couche sous forme de liste any[] pour la liste de Map<String, Object> envoyé par l'API Java
   public recupereUneCouche(nomDeLaCouche: string) : Observable<any[]> {
 
-    return this.httpClient.get<any[]>(this.cheminHttp + "/" + nomDeLaCouche);
+    return this.httpClient.get<any[]>(this.cheminHttp + "/uneCouche/" + nomDeLaCouche);
 
   }
 
+  
 
   // service qui récupere la couche avec les points cliqué des utilisateurs sous forme de liste any[] pour la liste de Map<String, Object> envoyé par l'API Java
   public recupereLaCouchePointAndDescription() : Observable<any[]> {
 
     return this.httpClient.get<any[]>(this.cheminHttp + "/getCouchePoints");
+
+  }
+
+
+  // service qui récupere la couche avec les points filtré par la description
+  public recupereLaCouchePointFiltreByDescription(motAChercher: string) : Observable<any[]> {
+
+    return this.httpClient.get<any[]>(this.cheminHttp + "/filtreByDescription/" + motAChercher);
 
   }
 

@@ -13,8 +13,9 @@ import org.springframework.data.repository.support.Repositories;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import com.entrainement.miniAppLeaflet.model.PointAndDescription;
-import com.entrainement.miniAppLeaflet.repository.RepositoryPointAndDescription;
+import com.entrainement.miniAppLeaflet.model.UnPoint;
+import com.entrainement.miniAppLeaflet.repository.RepositoryCoucheSQL;
+import com.entrainement.miniAppLeaflet.repository.RepositoryCoucheJPA;
 
 @Service
 public class CoucheService {
@@ -23,21 +24,17 @@ public class CoucheService {
 	JdbcTemplate jdbcTemplate;
 	
 	@Autowired
-	private RepositoryPointAndDescription repositoryPointAndDescription;
+	private RepositoryCoucheJPA repositoryCoucheDesPoints;
 	
+	@Autowired
+	private RepositoryCoucheSQL repositoryCoucheParcelle;
 	
 	// cette fonction retourne la liste des tables/couches dans la Bdd
-	public List<String> getTables() {
+	public List<String> getListeDesTables() {
 		
 		List<String> listeDesTables;
 		
-		String sql = """
-				SELECT table_name
-				FROM information_schema.tables
-				WHERE table_schema = 'schema_mini_app_leaflet'
-			""";
-		
-		listeDesTables = jdbcTemplate.queryForList(sql, String.class);
+		listeDesTables = repositoryCoucheParcelle.sqlGetTable();
 		
 		return listeDesTables;
 		
@@ -49,29 +46,21 @@ public class CoucheService {
 		
 		List<Map<String, Object>> listeDesObjetsDuneCouche;
 		
-		String sql = """
-				SELECT *, ST_AsGeoJSON(ST_Transform(geom, 4326)) AS geomGeoJson
-				FROM schema_mini_app_leaflet.
-			""" + nomTable;
-		
-		listeDesObjetsDuneCouche = jdbcTemplate.queryForList(sql);
+		listeDesObjetsDuneCouche = repositoryCoucheParcelle.sqlGetUneCouche(nomTable);
 		
 		return listeDesObjetsDuneCouche;
 		
 	}
 	
 	
-	// cette fonction retourne chaque ligne d'une table/couche du schéma public uniquement:
+	// Cette fonction retourne la couche des Points cliqués, avec 
+	// chaque ligne d'une table/couche du schéma public uniquement:
+	
 	public List<Map<String, Object>> getCouchePoints(){
 		
 		List<Map<String, Object>> listeDesObjetsDuneCouche;
 		
-		String sql = """
-				SELECT *, ST_AsGeoJSON(geom) AS geomGeoJson
-				FROM public.
-			""" + "\"pointAndDescriptionUser\"";
-		
-		listeDesObjetsDuneCouche = jdbcTemplate.queryForList(sql);
+		listeDesObjetsDuneCouche = repositoryCoucheParcelle.sqlGetLaCoucheDesPoints();
 		
 		return listeDesObjetsDuneCouche;
 		
@@ -82,7 +71,7 @@ public class CoucheService {
 	
 	public List<List<Map<String, Object>>> getAllcouches(){
 		
-		List<String> listeDesNomsDesCouches = getTables();
+		List<String> listeDesNomsDesCouches = getListeDesTables();
 		
 		List<List<Map<String, Object>>> listeAvecToutesLesCouches = new ArrayList<List<Map<String,Object>>>();
 		
@@ -111,7 +100,7 @@ public class CoucheService {
 		// création de l'objet complet avec le Point + la description pour
 		// ensuite l'enregistrer en Bdd via JPA:
 		
-		PointAndDescription pointAndDescription = new PointAndDescription();
+		UnPoint pointAndDescription = new UnPoint();
 		
 		pointAndDescription.setGeom(pointCreer);
 		pointAndDescription.setDescription(description);
@@ -119,8 +108,16 @@ public class CoucheService {
 		
 		
 		//enregistrement en Bdd via JPA :
-		repositoryPointAndDescription.save(pointAndDescription);
+		repositoryCoucheDesPoints.save(pointAndDescription);
 		
+		
+	}
+	
+	
+	
+	public List<UnPoint> filtreDescription(String motAChercher) {
+		
+		return repositoryCoucheDesPoints.findByDescriptionContainingIgnoreCase(motAChercher);
 		
 	}
 

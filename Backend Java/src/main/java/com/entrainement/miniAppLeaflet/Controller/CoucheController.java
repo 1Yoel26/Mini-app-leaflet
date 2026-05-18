@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.entrainement.miniAppLeaflet.dto.DtoPointAndDescription;
-
+import com.entrainement.miniAppLeaflet.model.UnPoint;
 import com.entrainement.miniAppLeaflet.service.CoucheService;
 
 @RestController
@@ -27,7 +27,7 @@ public class CoucheController {
 	@GetMapping("/listeDesTables")
 	public List<String> getListeDesTables(){
 		
-		return coucheService.getTables();
+		return coucheService.getListeDesTables();
 	}
 	
 	
@@ -39,7 +39,7 @@ public class CoucheController {
 	}
 	
 	// A modifier en production pour sécuriser le paramètre du nomDeLaCouche
-	@GetMapping("/{nomDeLaCouche}")
+	@GetMapping("uneCouche/{nomDeLaCouche}")
 	public List<Map<String, Object>> getUneCouche(@PathVariable String nomDeLaCouche){
 		
 		return coucheService.getCouche(nomDeLaCouche);
@@ -72,5 +72,13 @@ public class CoucheController {
 		return coucheService.getCouchePoints();
 		
 	}
+	
+	
+	@GetMapping("/filtreByDescription/{extraitDescription}")
+	public List<UnPoint> getCoucheDesPointsFiltrer(@PathVariable("extraitDescription") String motAChercher){
+		
+		return coucheService.filtreDescription(motAChercher);
+	}
 
+	
 }
