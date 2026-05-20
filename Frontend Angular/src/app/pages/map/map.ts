@@ -8,6 +8,7 @@ import { ServiceEventSubject } from '../../services/services-event/service-event
 import { NewPointAdd } from '../../interfaces/new-point-add';
 import { ServiceEventClicDashboard } from '../../services/services-event/service-clic-dashboard';
 import { FiltreMap } from '../../components/filtre-map/filtre-map';
+import { ServiceEventFiltre } from '../../services/services-event/service-event-filtre';
 
 // code nécéssaire pour avoir le chemin correct des icones de Leaflet dans la carte :
 // suppression des chemins des icones définis par défaut dans Leaflet qui sont incorrect avec Angular : 
@@ -32,9 +33,9 @@ export class Map implements AfterViewInit {
   constructor(
     private matDialog: MatDialog,
     private serviceLeaflet: ServiceLeaflet,
-    private servicePointsStorage: ServicePointsStorage,
     private serviceEventSubject : ServiceEventSubject,
-    private serviceEventClicDashboard: ServiceEventClicDashboard
+    private serviceEventClicDashboard: ServiceEventClicDashboard,
+    private serviceEventFiltre: ServiceEventFiltre
   ){}
 
   // propriété de type L.Map qui est le type dans Leaflet pour afficher la carte:
@@ -58,13 +59,31 @@ export class Map implements AfterViewInit {
     // appel de la fonction pour ajouter automatiquement toutes les couches de la Bdd sur la carte Leaflet:
     this.serviceLeaflet.ajouterToutesLesCouches(this.maCarte);
 
+    this.serviceEventFiltre.observableSubjectFiltre$.subscribe(
+      (texteAChercher: string)=>{
+        if(texteAChercher != ""){
 
-    // appel de la fonction pour ajouter la couche avec les points cliqués sur la carte:
-    this.serviceLeaflet.recupererEtAfficherLaCoucheAvecLesPointsCliquer(this.maCarte);
+          // appel de la fonction pour ajouter la couche avec les points filtrés sur la carte:
+          this.serviceLeaflet.recupererEtAfficherLaCoucheAvecLesPointsFiltrer(texteAChercher, this.maCarte);
+    
+        }
+
+        else{
+
+          // appel de la fonction pour ajouter la couche avec les points cliqués sur la carte:
+          this.serviceLeaflet.recupererEtAfficherLaCoucheAvecLesPointsCliquer(this.maCarte);
+    
+        }
+      }
+    );
+
+    
     
 
-    // à chaque ajout d'un point par l'utilisateur, 
-    // ajout de ce point via le servicePointStorage et le serviceEventSubject :
+    // A chaque ajout d'un point par l'utilisateur, 
+    // ajout de ce point sur la carte map.ts (sans sauvegarde en Bdd ici, le lancement
+    // de la sauvegarde du point en Bdd est dans le formulaire-point.ts) 
+    // via le serviceEventSubject :
 
     this.serviceEventSubject.notifAddPointObservable$.subscribe(
 
@@ -78,6 +97,8 @@ export class Map implements AfterViewInit {
     );
 
 
+    // Après un clic sur une des lignes du tableau des points dans la page Dashboard, 
+    // notification et redirection ici, puis zoom sur le point, dans la ligne cliqué :
     this.serviceEventClicDashboard.notifClicDashboard$.subscribe(
       (tableauCoordonneesPoint: NewPointAdd | null)=>{
         this.serviceLeaflet.zoomSurUnPoint(this.maCarte, tableauCoordonneesPoint);

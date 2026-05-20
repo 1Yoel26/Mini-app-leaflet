@@ -1,1 +1,29 @@
+<form [formGroup]="formGroupFiltre" class="formulaire-filtre">
+
+  <div class="input-wrapper">
+
+    <mat-icon class="search-icon">search</mat-icon>
+
+    <input
+      type="text"
+      #inputRechercheFocus
+      placeholder="Rechercher les points contenant ce texte dans la description..."
+      formControlName="description"
+      class="inputRecherche"
+    /> 
+
+  </div>
+
+</form>
+
+
+
+  @if (booleenAucunResultatTrouver) {
+
+    <div class="divMessageErreur">
+        <span class="aucunResultatTrouver">{{aucunResultatTrouver}}</span>
+    </div>
+    <br>
+  }
+
 

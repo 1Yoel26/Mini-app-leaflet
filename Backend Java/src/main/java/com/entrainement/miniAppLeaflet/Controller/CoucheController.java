@@ -75,7 +75,7 @@ public class CoucheController {
 	
 	
 	@GetMapping("/filtreByDescription/{extraitDescription}")
-	public List<UnPoint> getCoucheDesPointsFiltrer(@PathVariable("extraitDescription") String motAChercher){
+	public List<Map<String, Object>> getCoucheDesPointsFiltrer(@PathVariable("extraitDescription") String motAChercher){
 		
 		return coucheService.filtreDescription(motAChercher);
 	}

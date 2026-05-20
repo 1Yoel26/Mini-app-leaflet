@@ -21,13 +21,11 @@ import com.entrainement.miniAppLeaflet.repository.RepositoryCoucheJPA;
 public class CoucheService {
 	
 	@Autowired
-	JdbcTemplate jdbcTemplate;
-	
-	@Autowired
 	private RepositoryCoucheJPA repositoryCoucheDesPoints;
 	
 	@Autowired
 	private RepositoryCoucheSQL repositoryCoucheParcelle;
+	
 	
 	// cette fonction retourne la liste des tables/couches dans la Bdd
 	public List<String> getListeDesTables() {
@@ -115,9 +113,9 @@ public class CoucheService {
 	
 	
 	
-	public List<UnPoint> filtreDescription(String motAChercher) {
+	public List<Map<String, Object>> filtreDescription(String motAChercher) {
 		
-		return repositoryCoucheDesPoints.findByDescriptionContainingIgnoreCase(motAChercher);
+		return repositoryCoucheParcelle.findByDescriptionContainingIgnoreCase(motAChercher);
 		
 	}
 
