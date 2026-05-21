@@ -1,4 +1,4 @@
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy } from '@angular/core';
 import * as L from 'leaflet';
 import { FormulairePoint } from '../../components/formulaire-point/formulaire-point';
 import { MatDialog } from '@angular/material/dialog';
@@ -9,6 +9,7 @@ import { NewPointAdd } from '../../interfaces/new-point-add';
 import { ServiceEventClicDashboard } from '../../services/services-event/service-clic-dashboard';
 import { FiltreMap } from '../../components/filtre-map/filtre-map';
 import { ServiceEventFiltre } from '../../services/services-event/service-event-filtre';
+import { Subscription } from 'rxjs';
 
 // code nécéssaire pour avoir le chemin correct des icones de Leaflet dans la carte :
 // suppression des chemins des icones définis par défaut dans Leaflet qui sont incorrect avec Angular : 
@@ -28,7 +29,7 @@ L.Icon.Default.mergeOptions({
   templateUrl: './map.html',
   styleUrl: './map.scss', 
 })
-export class Map implements AfterViewInit {
+export class Map implements AfterViewInit, OnDestroy {
 
   constructor(
     private matDialog: MatDialog,
@@ -38,8 +39,17 @@ export class Map implements AfterViewInit {
     private serviceEventFiltre: ServiceEventFiltre
   ){}
 
+  public aucunResultatTrouver: string = "Aucun point n'a été trouvé pour cette description.";
+
+  public booleenAucunResultatTrouver: boolean = false;
+
+  private nbDePointsTrouver: number = 0;
+
   // propriété de type L.Map qui est le type dans Leaflet pour afficher la carte:
   private maCarte!: L.Map;
+  private groupeDesCouches!: L.LayerGroup;
+
+  private subsription!: Subscription;
 
   // charger la carte Leaflet, uniquement une fois que le DOM Html est chargé (car Leaflet à besoin du DOM Html)
   ngAfterViewInit(): void {
@@ -47,6 +57,13 @@ export class Map implements AfterViewInit {
 
     // appel de la fonction pour retourner et afficher la carte Leaflet:
     this.maCarte = this.serviceLeaflet.afficherLaCarte("divMaCarte");
+
+
+    // ajout du groupe de couche sur la carte (pour contenir par la suite
+    // dedans les couches filtrés ou non):
+    this.groupeDesCouches = L.layerGroup().addTo(this.maCarte);
+
+
 
     // appel de la fonction pour : 
     // - récuperer le point cliqué par l'utilisateur
@@ -59,19 +76,22 @@ export class Map implements AfterViewInit {
     // appel de la fonction pour ajouter automatiquement toutes les couches de la Bdd sur la carte Leaflet:
     this.serviceLeaflet.ajouterToutesLesCouches(this.maCarte);
 
-    this.serviceEventFiltre.observableSubjectFiltre$.subscribe(
+    this.subsription = this.serviceEventFiltre.observableSubjectFiltre$.subscribe(
       (texteAChercher: string)=>{
         if(texteAChercher != ""){
 
+          this.groupeDesCouches.clearLayers();
+
           // appel de la fonction pour ajouter la couche avec les points filtrés sur la carte:
-          this.serviceLeaflet.recupererEtAfficherLaCoucheAvecLesPointsFiltrer(texteAChercher, this.maCarte);
+          this.serviceLeaflet.recupererEtAfficherLaCoucheAvecLesPointsFiltrer(texteAChercher, this.groupeDesCouches, this.maCarte);
     
         }
 
         else{
 
+          this.groupeDesCouches.clearLayers();
           // appel de la fonction pour ajouter la couche avec les points cliqués sur la carte:
-          this.serviceLeaflet.recupererEtAfficherLaCoucheAvecLesPointsCliquer(this.maCarte);
+          this.serviceLeaflet.recupererEtAfficherLaCoucheAvecLesPointsCliquer(this.groupeDesCouches);
     
         }
       }
@@ -96,7 +116,7 @@ export class Map implements AfterViewInit {
 
     );
 
-
+ 
     // Après un clic sur une des lignes du tableau des points dans la page Dashboard, 
     // notification et redirection ici, puis zoom sur le point, dans la ligne cliqué :
     this.serviceEventClicDashboard.notifClicDashboard$.subscribe(
@@ -105,9 +125,17 @@ export class Map implements AfterViewInit {
       }
     );
 
-    
-    
 
+  }   // fin du ngOnInit()
+
+
+
+
+  //  pour supprimer la subscription, afin  de ne pas avoir plusieurs 
+  //  alertes() en cas de texte non trouvé (en supprimant la subscription en changeant de pages):
+  ngOnDestroy(): void {
+    
+    this.subsription.unsubscribe();
 
   }
 

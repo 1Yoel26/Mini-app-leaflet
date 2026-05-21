@@ -1,6 +1,14 @@
 <!-- Ajout du filtre de recherche -->
 <app-filtre-map></app-filtre-map>
 
+@if (booleenAucunResultatTrouver) {
+
+    <div class="divMessageErreur">
+        <span class="aucunResultatTrouver">{{aucunResultatTrouver}}</span>
+    </div>
+    <br>
+  }
+
 <!-- Création du conteneur html qui va contenir la carte Leaflet via son id="divMaCarte" -->
 <div id="divMaCarte"></div>
 

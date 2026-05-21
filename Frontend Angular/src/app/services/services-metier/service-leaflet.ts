@@ -6,6 +6,7 @@ import { FormulairePoint } from '../../components/formulaire-point/formulaire-po
 import { ServicePointsStorage } from '../services-stockage/service-points-storage';
 import { ServiceExtraitDescription } from './service-extrait-description';
 import { NewPointAdd } from '../../interfaces/new-point-add';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root',
@@ -20,7 +21,8 @@ export class ServiceLeaflet {
   constructor(
         private serviceCouche: ServiceCouche,
         private servicePointsLocalStorage: ServicePointsStorage,
-        private serviceExtraitDescription : ServiceExtraitDescription
+        private serviceExtraitDescription : ServiceExtraitDescription,
+        private popup: MatSnackBar
   ){}
 
 
@@ -74,8 +76,18 @@ export class ServiceLeaflet {
   // pour recuperer et ajouter automatiquement toutes les couches/tables sur la carte leaflet, depuis la bdd:
   ajouterToutesLesCouches(maCarte: L.Map): void{
 
-    this.serviceCouche.recuperetoutesLesCouche().subscribe(
+    this.serviceCouche.recuperetoutesLesCouche().subscribe({
+
+
+      // test de next:(), pour vérifier que le backend est lancé correctement :
+      next:() => {
+
+        
       (listeDeToutesLesCouches: any[][])=>{
+
+        if(listeDeToutesLesCouches.length == 0){
+          alert("Vérifier si l'application Backend est lancé correctement svp.");
+        }
 
         // recupération d'une seule couche/table à la fois :
         for(const uneCouche of listeDeToutesLesCouches){
@@ -99,9 +111,19 @@ export class ServiceLeaflet {
 
         }
 
-        
+      }
+
+      },
+
+
+      error : () => {
+
+        alert("Erreur lors de l'appel à l'aplication Backend pour récupérer les données de la base de données. \nMerci de vérifier s'il est lancé correctement.");
 
       }
+
+    }
+
     );
 
   }
@@ -143,7 +165,7 @@ export class ServiceLeaflet {
   // - récupérer la couche avec tous les points cliqués
   // - ajouter cette couche à la carte Leaflet
   
-  recupererEtAfficherLaCoucheAvecLesPointsCliquer(maCarte: L.Map): void {
+  recupererEtAfficherLaCoucheAvecLesPointsCliquer(groupeDesCouches: L.LayerGroup): void {
 
     this.serviceCouche.recupereLaCouchePointAndDescription().subscribe(
       (laCoucheDesPoints: any[])=>{
@@ -181,7 +203,7 @@ export class ServiceLeaflet {
               
             },
             
-          }).addTo(maCarte);
+          }).addTo(groupeDesCouches);
 
 
         }
@@ -224,23 +246,42 @@ export class ServiceLeaflet {
   // - récupérer la couche avec tous les points filtrés par l'utilisateur
   // - ajouter cette couche à la carte Leaflet
   
-  recupererEtAfficherLaCoucheAvecLesPointsFiltrer(motAChercher: string, maCarte: L.Map): void {
+  recupererEtAfficherLaCoucheAvecLesPointsFiltrer(motAChercher: string, groupeDesCouches: L.LayerGroup, maCarte: L.Map): void {
 
-    let tourDeBoucle: number = 0;
+    let nbDePointsTrouver: number = 0;
 
     this.serviceCouche.recupereLaCouchePointFiltreByDescription(motAChercher).subscribe(
       (laCoucheDesPoints: any[])=>{
+
+        nbDePointsTrouver = laCoucheDesPoints.length;
+
+        if(nbDePointsTrouver == 0){
+
+          this.popup.open(
+            "Aucun point trouvé pour cette description.",
+            "Fermer",
+            {
+            duration: 2000,
+            verticalPosition: "bottom"
+            }
+          );
+          
+        }
+
+
         for(let unPointStringSql of laCoucheDesPoints){
 
           // conversion de l'objet string en objet Json compatible avec GeoJson
           const unPointStringConvertitEnJson = JSON.parse(unPointStringSql.geomgeojson);
 
+        
           // Transformation de la description longues, en extrait, 
           // pour pouvoir ensuite l'ajouter en étiquette sur chacun des points sur la carte:
           let extraitDescriptionDunPoint: string = this.serviceExtraitDescription.transformationDescriptionEnExtrait(unPointStringSql.description);
           
+          
 
-          // création de la couche avec les points + ajout sur la carte Leaflet:
+          // création de la couche avec les points + ajout de ce point dans le groupeDeCouche:
           L.geoJSON(unPointStringConvertitEnJson, {
             
             // Ajout de l'extrait de la description, ainsi que de la description complète,
@@ -265,12 +306,25 @@ export class ServiceLeaflet {
               
             },
             
-          }).addTo(maCarte);
+          }).addTo(groupeDesCouches);
 
 
         }
+
+
+        //récupération du dernier point trouvé pour zoomer automatiquement dessus lors de la recherche :
+        let dernierPointTrouver: any = laCoucheDesPoints[nbDePointsTrouver-1];
+
+        let dernierPointTrouverEnGeoJson = JSON.parse(dernierPointTrouver.geomgeojson);
+
+        let tabCoordonneesDuPoint = dernierPointTrouverEnGeoJson.coordinates;
+
+        maCarte.flyTo([tabCoordonneesDuPoint[1], tabCoordonneesDuPoint[0]], 16);
+
+
       }
     );
+
 
   }
 
