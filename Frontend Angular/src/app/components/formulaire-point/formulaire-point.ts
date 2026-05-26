@@ -7,11 +7,12 @@ import { ServicePointsStorage } from '../../services/services-stockage/service-p
 import { ServiceEventSubject } from '../../services/services-event/service-event-subject';
 import { NewPointAdd } from '../../interfaces/new-point-add';
 import { MatDialogRef } from '@angular/material/dialog';
+import { MatAnchor, MatButtonModule } from "@angular/material/button";
 
 
 @Component({
   selector: 'app-formulaire-point',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, MatAnchor, MatButtonModule],
   templateUrl: './formulaire-point.html',
   styleUrl: './formulaire-point.scss',
 })

@@ -6,8 +6,8 @@
 <div class="divPopupDuForm">
 
     <form [formGroup]="formulaireGroupePoint" (ngSubmit)="envoyerFormulaire()">
-        <textarea formControlName="commentaireSurLaZonneSaisit"></textarea> <br><br>
-        <button type="submit" [disabled]="formulaireGroupePoint.invalid">Envoyer</button>
+        <textarea formControlName="commentaireSurLaZonneSaisit"></textarea> 
+        <button mat-raised-button type="submit" [disabled]="formulaireGroupePoint.invalid">Envoyer</button>
     </form>
 
 </div>
