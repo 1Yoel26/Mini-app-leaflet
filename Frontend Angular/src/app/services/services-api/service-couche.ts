@@ -10,7 +10,7 @@ export class ServiceCouche {
 
   constructor(private httpClient: HttpClient){}
 
-  private cheminHttp: string = "http://localhost:8080/api-leaflet";
+  private cheminHttp: string = "http://localhost:8080/api-leaflet/couche";
 
   // service qui récupere une liste avec toutes les couches sous forme de liste de liste any[] pour la liste de List<Map<String, Object>> envoyé par l'API Java
   public recuperetoutesLesCouche() : Observable<any[][]> {

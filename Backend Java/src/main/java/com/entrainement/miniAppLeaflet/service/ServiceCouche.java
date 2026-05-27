@@ -18,7 +18,7 @@ import com.entrainement.miniAppLeaflet.repository.RepositoryCoucheSQL;
 import com.entrainement.miniAppLeaflet.repository.RepositoryCoucheJPA;
 
 @Service
-public class CoucheService {
+public class ServiceCouche {
 	
 	@Autowired
 	private RepositoryCoucheJPA repositoryCoucheDesPoints;

@@ -5,6 +5,8 @@ import { MatCard, MatCardTitle } from "@angular/material/card";
 import { MatFormField, MatLabel, MatError } from "@angular/material/form-field";
 import { MatInputModule } from '@angular/material/input';
 import { UserCreationCompte } from '../../interfaces/user-creation-compte';
+import { ServiceUser } from '../../services/services-api/service-user';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-creation-compte',
@@ -24,6 +26,11 @@ import { UserCreationCompte } from '../../interfaces/user-creation-compte';
 export class CreationCompte implements OnInit {
 
    public formGroup!: FormGroup;
+
+   constructor(
+    private serviceUser: ServiceUser,
+    private matSnackBar: MatSnackBar
+  ){}
 
 
   ngOnInit(): void {
@@ -74,7 +81,36 @@ export class CreationCompte implements OnInit {
 
       infoCompte = this.formGroup.value;
 
-      alert(JSON.stringify(infoCompte));
+      let addNewUserReussi: Boolean;
+
+      this.serviceUser.addNewCompte(infoCompte).subscribe(
+        (booleanAddNewUserReussi: boolean)=>{
+          addNewUserReussi = booleanAddNewUserReussi;
+
+          // si la création du compte à réussi:
+          if(addNewUserReussi == true){
+
+            this.matSnackBar.open("✅ Votre compte à été créé avec succès!", "Fermer", {
+              duration: 3000,
+              verticalPosition: "top"
+            });
+
+          }else{
+
+            this.matSnackBar.open("❌ Erreur lors de la création de votre compte, car cet email est déjà pris.", "Fermer", {
+              duration: 15000,
+              verticalPosition: "top"
+            });
+
+          }
+
+
+          // si la création du compte à échoué (car l'email est déjà pris):
+        }
+      );
+
+      
+
 
     }
 

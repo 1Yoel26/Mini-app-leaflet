@@ -14,15 +14,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.entrainement.miniAppLeaflet.dto.DtoPointAndDescription;
 import com.entrainement.miniAppLeaflet.model.UnPoint;
-import com.entrainement.miniAppLeaflet.service.CoucheService;
+import com.entrainement.miniAppLeaflet.service.ServiceCouche;
 
 @RestController
-@RequestMapping("/api-leaflet")
+@RequestMapping("/api-leaflet/couche")
 @CrossOrigin(origins = "http://localhost:4200")
-public class CoucheController {
+public class ControllerCouche {
 	
 	@Autowired
-	private CoucheService coucheService;
+	private ServiceCouche coucheService;
 	
 	@GetMapping("/listeDesTables")
 	public List<String> getListeDesTables(){

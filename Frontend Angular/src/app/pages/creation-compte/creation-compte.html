@@ -1,6 +1,6 @@
 <mat-card>
 
-    <mat-card-title>Connection à votre compte</mat-card-title><br>
+    <mat-card-title>Création de votre compte</mat-card-title><br>
 
     <form [formGroup]="formGroup" (ngSubmit)="addNewCompte()">
 
@@ -11,7 +11,7 @@
             <input matInput type="text" formControlName="nom">  
 
             <mat-error>
-                Nom invalide
+                Nom invalide (longueur minimum requise)
             </mat-error>
 
         </mat-form-field>
@@ -23,7 +23,7 @@
             <input matInput type="text" formControlName="prenom">  
 
             <mat-error>
-                Prénom invalide
+                Prénom invalide (longueur minimum requise)
             </mat-error>
 
         </mat-form-field>
@@ -48,7 +48,7 @@
             <input matInput type="password" formControlName="motDePasse">
 
             <mat-error>
-                Mot de passe invalide
+                Mot de passe invalide (longueur minimum requise)
             </mat-error>
             
         </mat-form-field>

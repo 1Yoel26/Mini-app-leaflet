@@ -102,6 +102,8 @@ export class FormulairePoint implements OnInit{
       // en cas de retour avec erreur du backend
       error:()=> {
         alert("Une erreur s'est produite lors de l'envois de votre description. Merci de ré-essayer ultérieurement.");
+        
+        return false;
       }
     });
 
