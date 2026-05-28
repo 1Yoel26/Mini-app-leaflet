@@ -104,14 +104,11 @@ export class CreationCompte implements OnInit {
 
           }
 
-
           // si la création du compte à échoué (car l'email est déjà pris):
         }
       );
 
       
-
-
     }
 
   }
