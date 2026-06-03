@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UserCreationCompte } from '../../interfaces/user-creation-compte';
 import { Observable } from 'rxjs';
+import { UserConnectionCompte } from '../../interfaces/user-connection-compte';
 
 @Injectable({
   providedIn: 'root',
@@ -15,6 +16,13 @@ export class ServiceUser {
   addNewCompte(infoCompte: UserCreationCompte): Observable<boolean>{
 
     return this.httpClient.post<boolean>( this.cheminHttp + "/addUser", infoCompte);
+
+  }
+
+
+  authentificationCompte(infoConnectionCompte: UserConnectionCompte){
+
+    return this.httpClient.post<boolean>(this.cheminHttp + "/authentification", infoConnectionCompte);
 
   }
 

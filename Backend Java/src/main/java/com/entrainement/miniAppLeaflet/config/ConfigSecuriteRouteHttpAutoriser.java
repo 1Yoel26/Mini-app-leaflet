@@ -1,11 +1,12 @@
 package com.entrainement.miniAppLeaflet.config;
 
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.CorsBeanDefinitionParser;
 import org.springframework.security.web.SecurityFilterChain;
+
 
 @Configuration
 @EnableWebSecurity  // pour dire a Spring Security d'utiliser cette config sécurité en plus:
@@ -30,27 +31,38 @@ public class ConfigSecuriteRouteHttpAutoriser {
 		
 		
 		reglesDeSecuritePourRequetesHttp
-			.csrf(csrf->csrf.disable())
+		
+			.cors(cors->{}) // active CORS pour autoriser dans Spring Security les requettes Http venant d'Angular ou autres vers le back
+	
+			.csrf(csrf->csrf.disable())  // desactive le csrf pour la protection des session via des cookies car là c'est la technologie JWT Token qui est utilisé à la place
+			
 			.authorizeHttpRequests(
 				configRouteHttp -> {
 					
 					// les routes autorisés sans être connecté à son
-					// compte  (avec le jwt token dedans)
-					configRouteHttp.requestMatchers("/auth/**").permitAll();
+					// compte  (sans avoir le JWT Token dedans)
+					configRouteHttp.requestMatchers("/api-leaflet/user/**").permitAll();
 					
 					
-					// toutes les autres routes sont bloqué sans être connecté à son
-					// compte (sans le jwt token dedans)
+					// toutes les autres routes sont bloqué (par la suite) sans être connecté à son
+					// compte (il faut le jwt token dans la requette Http, et qu'il soit
+					// valide pour pouvoir lancer les autres requettes Http dans l'app Back Java)
 					configRouteHttp.anyRequest().authenticated();
 					
 					
 				}
-				);
+				
+					);
 		
 		
 		return reglesDeSecuritePourRequetesHttp.build();
 		
 	}
 	
+	
+	
+	
+	
+
 
 }

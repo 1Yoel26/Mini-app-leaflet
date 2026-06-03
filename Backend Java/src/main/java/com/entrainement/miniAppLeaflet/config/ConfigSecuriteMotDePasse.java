@@ -14,7 +14,7 @@ public class ConfigSecuriteMotDePasse {
 	// si besoin pour la fonctionalité Connection à un compte)
 	
 	@Bean
-	PasswordEncoder passwordEncoder() {
+	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 	
