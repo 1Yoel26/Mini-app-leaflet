@@ -1,4 +1,4 @@
-package com.entrainement.miniAppLeaflet.Controller;
+package com.entrainement.miniAppLeaflet.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

@@ -1,4 +1,4 @@
-package com.entrainement.miniAppLeaflet.Controller;
+package com.entrainement.miniAppLeaflet.controller;
 
 import java.util.List;
 import java.util.Map;

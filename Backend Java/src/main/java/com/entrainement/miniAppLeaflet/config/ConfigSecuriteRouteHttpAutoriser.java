@@ -47,8 +47,7 @@ public class ConfigSecuriteRouteHttpAutoriser {
 					// toutes les autres routes sont bloqué (par la suite) sans être connecté à son
 					// compte (il faut le jwt token dans la requette Http, et qu'il soit
 					// valide pour pouvoir lancer les autres requettes Http dans l'app Back Java)
-					configRouteHttp.anyRequest().authenticated();
-					
+					configRouteHttp.anyRequest().permitAll();
 					
 				}
 				
