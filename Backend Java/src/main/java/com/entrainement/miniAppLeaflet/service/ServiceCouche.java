@@ -44,6 +44,14 @@ public class ServiceCouche {
 		
 		List<Map<String, Object>> listeDesObjetsDuneCouche;
 		
+		// ATTENTION! faille grave de sécurité ici, non corrigé encore,
+		// il faut OBLIGATOIREMENT vérifier 
+		// si le nom de la table (récupérer de l'url) est bien un nom de table VALIDE, connu dans la Bdd
+		// car sinon il est possible de mettre une requete sql en nom de table, qui pourrait par exemple
+		// supprimer toutes les tables de la Bdd.
+		
+		// Cette vérification doit se faire avant l'appel à : repositoryCoucheParcelle.sqlGetUneCouche(nomTable);
+		
 		listeDesObjetsDuneCouche = repositoryCoucheParcelle.sqlGetUneCouche(nomTable);
 		
 		return listeDesObjetsDuneCouche;

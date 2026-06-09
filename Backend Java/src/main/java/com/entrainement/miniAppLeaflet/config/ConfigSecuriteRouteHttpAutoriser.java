@@ -44,11 +44,16 @@ public class ConfigSecuriteRouteHttpAutoriser {
 					configRouteHttp.requestMatchers("/api-leaflet/user/**").permitAll();
 					
 					
-					// toutes les autres routes sont bloqué (par la suite) sans être connecté à son
+					// Actuellement toutes les autres route de l'API Java sont autorisé sans être connecté,
+					// pour permettre à l'app de fonctionner correctement, car la connection au compte n'est pas encore opérationelle à 100%
+					
+					// Cependant toutes ces autres routes devront OBLIGATOIREMENT être bloqué (par la suite) sans être connecté à son
 					// compte (il faut le jwt token dans la requette Http, et qu'il soit
 					// valide pour pouvoir lancer les autres requettes Http dans l'app Back Java)
-					configRouteHttp.anyRequest().permitAll();
 					
+					configRouteHttp.anyRequest().permitAll(); // temporaire uniquement
+				
+					// configRouteHttp.anyRequest().authenticated(); // à remplacer par cela obligatoirement.
 				}
 				
 					);
