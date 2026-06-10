@@ -31,7 +31,7 @@ Elle permet ainsi d’explorer et enrichir des données géographiques de maniè
 
 
 ### Technologies à installé
-- Java **17+** (langage de programmation)
+- Java 17+ (langage de programmation)
 - PostgreSQL (base de données relationnelle)
 - PgAdmin4 (outil d’administration PostgreSQL)
 - Maven (outil de compilation et de gestion des dépendances pour le backend)
@@ -88,8 +88,8 @@ L'API backend est à présent disponible sur : http://localhost:8080
 
 
 ### Technologies à installé pour le frontend
-- Node.js **>= 18**
-- Angular CLI
+- Node.js >= 18 (logiciel d'exécution JavaScript pour lancer l’application frontend)
+- Angular CLI (outil Angular permettant de générer et exécuter l’application frontend)
 
 
 ### Installer les dépendances pour cette application Angular
