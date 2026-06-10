@@ -56,7 +56,7 @@ Elle permet ainsi d’explorer et enrichir des données géographiques de maniè
 
 
 ### Modification du fichier `application.properties` :
-Dans le fichier `application.properties` dans `Mini-app-leaflet/Backend Java/src/main/resources/application.properties`, modifier uniquement ces 2 lignes :
+Dans le fichier `application.properties` dans `Mini-app-leaflet/Backend Java/src/main/resources/application.properties`, modifier uniquement ces 2 lignes (ligne 4 et 5) :
 
 spring.datasource.username=VOTRE_USERNAME_POSTGRESQL
 spring.datasource.password=VOTRE_PASSWORD_POSTGRESQL
@@ -90,6 +90,11 @@ L'API backend est à présent disponible sur : http://localhost:8080
 ### Technologies à installé pour le frontend
 - Node.js >= 18 (logiciel d'exécution JavaScript pour lancer l’application frontend)
 - Angular CLI (outil Angular permettant de générer et exécuter l’application frontend)
+
+Pour installer Angular CLI vous pouvez utiliser cette commande dans le dossier `Mini-app-leaflet/Frontend Angular` (après avoir installé Node.js) :
+```bash
+npm install -g @angular/cli
+```
 
 
 ### Installer les dépendances pour cette application Angular

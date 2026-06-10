@@ -42,7 +42,7 @@ public class ServiceCouche {
 	// cette fonction retourne chaque ligne d'une table/couche du schéma schema_mini_app_leaflet uniquement:
 	public List<Map<String, Object>> getCouche(String nomTable){
 		
-		List<Map<String, Object>> listeDesObjetsDuneCouche;
+		List<Map<String, Object>> listeDesObjetsDuneCouche = null;
 		
 		// ATTENTION! faille grave de sécurité ici, non corrigé encore,
 		// il faut OBLIGATOIREMENT vérifier 
@@ -52,7 +52,12 @@ public class ServiceCouche {
 		
 		// Cette vérification doit se faire avant l'appel à : repositoryCoucheParcelle.sqlGetUneCouche(nomTable);
 		
-		listeDesObjetsDuneCouche = repositoryCoucheParcelle.sqlGetUneCouche(nomTable);
+		
+		List<String> listeDesTablesAutoriser = repositoryCoucheParcelle.sqlGetTable();
+		
+		if(listeDesTablesAutoriser.contains(nomTable)) {
+			listeDesObjetsDuneCouche = repositoryCoucheParcelle.sqlGetUneCouche(nomTable);
+		}
 		
 		return listeDesObjetsDuneCouche;
 		
