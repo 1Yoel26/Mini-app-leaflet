@@ -17,9 +17,9 @@ L'application **Mini-App Leaflet** permet de :
 Elle permet ainsi d’explorer et enrichir des données géographiques de manière simple et interactive.
 
 
-## 🚨⚠️🚨 ATTENTION Notes importantes de sécurité sur l'application web : 🚨⚠️🚨
+## 🚨⚠️🚨 ATTENTION Notes importantes de sécurité sur l'application web : 
 
-- Plusieurs points de sécurité important n'ont pas encore pu être corrigé (voir dans le dossier `Points critiques de sécurité à corriger`)
+- 🚨⚠️🚨 Plusieurs points de sécurité important n'ont pas encore pu être corrigé (voir dans le dossier `Points critiques de sécurité à corriger`)🚨⚠️🚨
 
 - La fonctionalité de connexion à un compte n'est pas encore terminé.
 
