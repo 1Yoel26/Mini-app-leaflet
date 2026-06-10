@@ -1,99 +1,105 @@
-# 🚀 MiniApp Leaflet - Installation rapide
+# 🚀 Mini-App Leaflet - Guide d'installation
 
 ---
 
-## 📦 Pré-requis
+## Fonctionnalités principales de l'application
 
-### 🔧 Backend
-- Java **17+**
-- Maven installé  
-```bash
-mvn -v
-```
-- PostgreSQL installé
-- PostGIS activé
+L'application **Mini-App Leaflet** permet de :
 
----
+- afficher une carte interactive grâce à Leaflet
+- visualiser des données géographiques issues de couches QGIS 
+- consulter des zones spécifiques
+- ajouter des points avec une description 
+- filtrer les points affichés selon leur description
+- créer un compte utilisateur
 
-### 🌐 Frontend
-- Node.js **>= 18**
-- Angular CLI installé  
-```bash
-npm install -g @angular/cli
-```
+Elle permet ainsi d’explorer et enrichir des données géographiques de manière simple et interactive :-)
+
+
+*Note : La fonctionalité de connexion à un compte n'est pas encore terminé.*
 
 ---
 
-## 🗄️ Base de données
+## Configuration necéssaire pour l'API backend
 
-### ✅ Créer la base
 
-```sql
-CREATE DATABASE miniapp_leaflet;
+### Technologies à installé
+- Java **17+** (langage de programmation)
+- PostgreSQL (base de données relationnelle)
+- PgAdmin4 (outil d’administration PostgreSQL)
+- Maven (outil de compilation et de gestion des dépendances pour le backend)
 
-\c miniapp_leaflet;
 
-CREATE EXTENSION postgis;
-```
+### Création de la base de données
+- Ouvrez le logiciel PgAdmin4
+- Connectez vous à votre compte PostgreSQL
+- Dans le menu tout en haut, cliquez sur l'onglet Tools puis Query tool
+- Puis cliquez sur le bouton Open File (Ctrl + O), qui se trouve en haut à gauche de la console SQL
+- Puis selectionnez le fichier Bdd_app_leaflet.sql qui se trouve dans : Mini-app-leaflet/Base de données PostgreSQL/Bdd_app_leaflet.sql
+- Puis pour terminer, cliquez sur le bouton *Execute script* (F5).
 
----
 
-### ✅ Importer les tables
+**Resultat attendu**
+- Base de donnée bdd_mini_app_leaflet créé
+- Extension PostGIS activé dedans
+- Création de toutes les tables avec leurs données
+- Dont notamment un compte User de test créé dans le schéma *public* dans la table *user* avec :
+    - email : test.test@test.com
+    - mot de passe : Test
 
-```bash
-psql -U postgres -d miniapp_leaflet -f script.sql
-```
 
-👉 Le fichier `script.sql` doit contenir :
-- la création des tables
-- des données de test
+### Modification du fichier `application.properties` :
+Dans le fichier `application.properties` dans `Mini-app-leaflet/Backend Java/src/main/resources/application.properties`, modifier uniquement ces 2 lignes :
 
----
+spring.datasource.username=VOTRE_USERNAME_POSTGRESQL
+spring.datasource.password=VOTRE_PASSWORD_POSTGRESQL
 
-## ⚙️ Backend (Spring Boot)
-
-### ✅ Configuration
-
-Modifier uniquement ces 3 lignes dans le fichier `application.properties` :
-
-```properties
-spring.datasource.url=jdbc:postgresql://localhost:5432/VOTRE_NOM_BDD
-spring.datasource.username=VOTRE_USERNAME
-spring.datasource.password=VOTRE_PASSWORD
-```
----
-
-### ▶️ Lancer le backend
+### Installer les dépendances pour cette application backend java
+Dans votre terminal, dans le dossier `Mini-app-leaflet/Backend Java`, executez cette commande :
 
 ```bash
 mvn clean install
+```
+
+### Lancer l'application backend
+
+Dans votre terminal, dans le dossier `Mini-app-leaflet/Backend Java`, executez cette commande :
+
+```bash
 mvn spring-boot:run
 ```
 
-👉 Backend disponible sur :  
-http://localhost:8080
+### Résultat attendu
+
+L'API backend est à présent disponible sur : http://localhost:8080
+
 
 ---
 
-## ⚙️ Frontend (Angular)
+## Configuration necéssaire pour l'application frontend Angular
 
-### ✅ Installer dépendances
+
+### Technologies à installé pour le frontend
+- Node.js **>= 18**
+- Angular CLI
+
+
+### Installer les dépendances pour cette application Angular
+Dans votre terminal, dans le dossier `Mini-app-leaflet/Frontend Angular`, executez cette commande :
 
 ```bash
 npm install
 ```
 
----
-
-### ▶️ Lancer l'application
+### Lancer l'application frontend
+Dans votre terminal, dans le dossier `Mini-app-leaflet/Frontend Angular`, executez cette commande :
 
 ```bash
 ng serve
 ```
 
-👉 Frontend disponible sur :  
-http://localhost:4200
+L'application frontend est à présent disponible sur `http://localhost:4200`
 
 ---
 
-✅ L'application est prête !
+**L'application est à présent prête à être utiliser ! Félicitations !**
