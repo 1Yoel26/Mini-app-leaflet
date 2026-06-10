@@ -17,13 +17,17 @@ L'application **Mini-App Leaflet** permet de :
 Elle permet ainsi d’explorer et enrichir des données géographiques de manière simple et interactive.
 
 
-*Note : La fonctionalité de connexion à un compte n'est pas encore terminé.*
+## Notes importantes de sécurité sur l'application web :
+
+- Plusieurs points de sécurité important n'ont pas encore pu être corrigé (voir dans le dossier `Points critiques de sécurité à corriger`)
+
+- La fonctionalité de connexion à un compte n'est pas encore terminé.
 
 
 ---
 
 
-## Configuration necéssaire pour l'API backend
+## ⚙️ Configuration necéssaire pour l'API backend
 
 
 ### Technologies à installé
@@ -80,7 +84,7 @@ L'API backend est à présent disponible sur : http://localhost:8080
 ---
 
 
-## Configuration necéssaire pour l'application frontend Angular
+## ⚙️ Configuration necéssaire pour l'application frontend Angular
 
 
 ### Technologies à installé pour le frontend
@@ -108,4 +112,4 @@ L'application frontend est à présent disponible sur `http://localhost:4200`
 ---
 
 
-**L'application est à présent prête à être utiliser ! Félicitations !**
+**L'application est à présent prête à être utilisé !🎉 Félicitations !🎉**
