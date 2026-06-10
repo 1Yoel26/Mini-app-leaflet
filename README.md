@@ -2,6 +2,7 @@
 
 ---
 
+
 ## Fonctionnalités principales de l'application
 
 L'application **Mini-App Leaflet** permet de :
@@ -13,12 +14,14 @@ L'application **Mini-App Leaflet** permet de :
 - filtrer les points affichés selon leur description
 - créer un compte utilisateur
 
-Elle permet ainsi d’explorer et enrichir des données géographiques de manière simple et interactive :-)
+Elle permet ainsi d’explorer et enrichir des données géographiques de manière simple et interactive.
 
 
 *Note : La fonctionalité de connexion à un compte n'est pas encore terminé.*
 
+
 ---
+
 
 ## Configuration necéssaire pour l'API backend
 
@@ -63,7 +66,7 @@ mvn clean install
 
 ### Lancer l'application backend
 
-Dans votre terminal, dans le dossier `Mini-app-leaflet/Backend Java`, executez cette commande :
+Puis dans ce même dossier, executez cette commande :
 
 ```bash
 mvn spring-boot:run
@@ -75,6 +78,7 @@ L'API backend est à présent disponible sur : http://localhost:8080
 
 
 ---
+
 
 ## Configuration necéssaire pour l'application frontend Angular
 
@@ -92,7 +96,7 @@ npm install
 ```
 
 ### Lancer l'application frontend
-Dans votre terminal, dans le dossier `Mini-app-leaflet/Frontend Angular`, executez cette commande :
+Puis dans ce même dossier, executez cette commande :
 
 ```bash
 ng serve
@@ -100,6 +104,8 @@ ng serve
 
 L'application frontend est à présent disponible sur `http://localhost:4200`
 
+
 ---
+
 
 **L'application est à présent prête à être utiliser ! Félicitations !**
