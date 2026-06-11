@@ -67,17 +67,22 @@ export class Authentification implements OnInit {
 
       // appel Http vers le backend
       this.serviceUser.authentificationCompte(infoConnectionCompe).subscribe(
-        (authentificationValider: Boolean) =>{
+        (jwtRetourner: string) =>{
 
-          // si l'appel Http retourne true (cela signifie que la connection à réussi:)
-          if(authentificationValider){
+          // si l'appel Http retourne une string avec 3 points, (cela signifie que la connection à réussi car la structure d'un jwt est : "header.payload.signature" )
+          if(jwtRetourner.split(".").length == 3){
 
-            alert("Authentification réussi ! ");
+            alert("Bravo ! Authentification réussi! \n" + jwtRetourner);
+
+            // stockage du tokenJwt dans le localstorage pour pouvoir le récupérer par la suite dans le interceptor.ts
+            localStorage.setItem("tokenJwt:", jwtRetourner);
 
           }
-          else{
 
-             alert("Dsl authentification échoué");
+          // si l'appel Http retourne une string Null jwt token (cela signifie que la connection à échoué)
+          else{
+             
+            alert("Dsl authentification échoué");
 
           }
         }

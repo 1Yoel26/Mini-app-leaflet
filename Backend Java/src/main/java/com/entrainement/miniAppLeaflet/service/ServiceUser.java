@@ -20,6 +20,9 @@ public class ServiceUser {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
+	@Autowired
+	private ServiceJwtGenererEtValider serviceJwtGenerer;
+	
 	
 	// Fonction qui ajoute un nouveau compte User en Bdd:
 	public boolean addNewCompte(User infoCompte) {
@@ -79,7 +82,7 @@ public class ServiceUser {
 	
 	
 	//Fonction pour la connection à un compte utilisateur :
-	public boolean connectionCompte(String email, String motDePasse) {
+	public String connectionCompte(String email, String motDePasse) {
 		
 		// test si l'email saisit pour se connecter, existe en Bdd (avant de tester le motDePasse saisit):
 		Optional<User> userTrouver =  repositoryUserJPA.findByEmail(email);
@@ -87,7 +90,7 @@ public class ServiceUser {
 		// Si aucun compte utilisateur n'est trouvé en Bdd pour cet email retourne False:
 		if(userTrouver.isEmpty()) {
 			
-			return false;
+			return null;
 		}
 		
 		// Sinon, si l'email est bien trouvé en Bdd, test du mot de passe saisit,
@@ -104,7 +107,20 @@ public class ServiceUser {
 		boolean motDePasseCorrect = passwordEncoder.matches(motDePasse, motDePasseHasheEnBdd);
 	
 		// 4) Si le mot de passe saisit est correct, return True, sinon retourne False :
-		return motDePasseCorrect;
+		
+		if(motDePasseCorrect) {
+			
+			String jwtGenerer = serviceJwtGenerer.genererJwt(email);
+			
+			// test :
+			boolean jwtvalide = serviceJwtGenerer.validerJwt(jwtGenerer);
+			System.out.println(jwtvalide);
+			
+			return jwtGenerer;
+			
+		}
+		
+		return null;
 		
 	}
 

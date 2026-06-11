@@ -10,8 +10,10 @@ import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.PrecisionModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.support.Repositories;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.entrainement.miniAppLeaflet.model.UnPoint;
 import com.entrainement.miniAppLeaflet.repository.RepositoryCoucheSQL;
@@ -44,19 +46,17 @@ public class ServiceCouche {
 		
 		List<Map<String, Object>> listeDesObjetsDuneCouche = null;
 		
-		// ATTENTION! faille grave de sécurité ici, non corrigé encore,
-		// il faut OBLIGATOIREMENT vérifier 
-		// si le nom de la table (récupérer de l'url) est bien un nom de table VALIDE, connu dans la Bdd
-		// car sinon il est possible de mettre une requete sql en nom de table, qui pourrait par exemple
-		// supprimer toutes les tables de la Bdd.
-		
-		// Cette vérification doit se faire avant l'appel à : repositoryCoucheParcelle.sqlGetUneCouche(nomTable);
-		
-		
 		List<String> listeDesTablesAutoriser = repositoryCoucheParcelle.sqlGetTable();
 		
+		// vérifie que la table demandé existe bien dans le schéma pour éviter les injections sql
 		if(listeDesTablesAutoriser.contains(nomTable)) {
 			listeDesObjetsDuneCouche = repositoryCoucheParcelle.sqlGetUneCouche(nomTable);
+		}
+		
+		// si la table demandé n'est pas autorisé :
+		if(listeDesObjetsDuneCouche == null) {
+			System.out.println("Erreur : Le nom de la table demandé n'est pas autorisé");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Erreur : Le nom de la table demandé n'est pas autorisé");
 		}
 		
 		return listeDesObjetsDuneCouche;

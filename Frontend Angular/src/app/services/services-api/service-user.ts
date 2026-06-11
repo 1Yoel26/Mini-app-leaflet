@@ -22,7 +22,7 @@ export class ServiceUser {
 
   authentificationCompte(infoConnectionCompte: UserConnectionCompte){
 
-    return this.httpClient.post<boolean>(this.cheminHttp + "/authentification", infoConnectionCompte);
+    return this.httpClient.post(this.cheminHttp + "/authentification", infoConnectionCompte, {responseType: 'text'});
 
   }
 

@@ -33,14 +33,14 @@ public class ControllerUser {
 	
 	
 	@PostMapping("/authentification")
-	boolean authentification(@RequestBody DtoUserAuthentification dtoUserAuthentification) {
+	String authentification(@RequestBody DtoUserAuthentification dtoUserAuthentification) {
 		
 		String emailConnection = dtoUserAuthentification.getEmail();
 		String motDePasseConnection = dtoUserAuthentification.getMotDePasse();
 		
-		boolean authentificationValide = serviceUser.connectionCompte(emailConnection, motDePasseConnection);
+		String authentificationValide = serviceUser.connectionCompte(emailConnection, motDePasseConnection);
 	
-		// return True si l'authentification est valide, est False si l'email ou le mot de passe incorrect:
+		// return null si l'email ou le mot de passe incorrect, et retourne le TokenJWT si l'authentification est valide:
 		return authentificationValide;
 	
 	}
