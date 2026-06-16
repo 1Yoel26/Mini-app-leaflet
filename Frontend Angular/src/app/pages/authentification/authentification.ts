@@ -75,14 +75,19 @@ export class Authentification implements OnInit {
             alert("Bravo ! Authentification réussi! \n" + jwtRetourner);
 
             // stockage du tokenJwt dans le localstorage pour pouvoir le récupérer par la suite dans le interceptor.ts
-            localStorage.setItem("tokenJwt:", jwtRetourner);
+            localStorage.setItem("tokenJwt", jwtRetourner);
 
+
+          }
+
+          else if(jwtRetourner == ""){
+            alert("Email ou mot de passe incorrect.");
           }
 
           // si l'appel Http retourne une string Null jwt token (cela signifie que la connection à échoué)
           else{
              
-            alert("Dsl authentification échoué");
+            alert("Désolé authentification échoué");
 
           }
         }
