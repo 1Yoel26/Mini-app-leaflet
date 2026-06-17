@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.entrainement.miniAppLeaflet.config.ConfigSecuriteMotDePasse;
 import com.entrainement.miniAppLeaflet.model.User;
 import com.entrainement.miniAppLeaflet.repository.RepositoryUserJPA;
+import com.entrainement.miniAppLeaflet.security.ConfigSecuriteMotDePasse;
 
 @Service
 public class ServiceUser {

@@ -1,4 +1,4 @@
-package com.entrainement.miniAppLeaflet.config;
+package com.entrainement.miniAppLeaflet.security;
 
 
 import org.springframework.context.annotation.Bean;
