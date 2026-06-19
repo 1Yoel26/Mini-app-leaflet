@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
 @Configuration
@@ -27,7 +28,7 @@ public class ConfigSecuriteRouteHttpAutoriser {
 	
 	
 	@Bean
-	SecurityFilterChain securityFilterChain(HttpSecurity reglesDeSecuritePourRequetesHttp) {
+	SecurityFilterChain securityFilterChain(HttpSecurity reglesDeSecuritePourRequetesHttp, FiltreJwt monFiltreJwt) {
 		
 		
 		reglesDeSecuritePourRequetesHttp
@@ -36,6 +37,10 @@ public class ConfigSecuriteRouteHttpAutoriser {
 	
 			.csrf(csrf->csrf.disable())  // desactive le csrf pour la protection des session via des cookies car là c'est la technologie JWT Token qui est utilisé à la place
 			
+			.formLogin(form->form.disable()) // desactivation du form login par défaut de Spring Security
+			
+			.httpBasic(httpBasic->httpBasic.disable())
+			
 			.authorizeHttpRequests(
 				configRouteHttp -> {
 					
@@ -43,20 +48,14 @@ public class ConfigSecuriteRouteHttpAutoriser {
 					// compte  (sans avoir le JWT Token dedans)
 					configRouteHttp.requestMatchers("/api-leaflet/user/**").permitAll();
 					
+					configRouteHttp.anyRequest().authenticated(); 
 					
-					// Actuellement toutes les autres route de l'API Java sont autorisé sans être connecté,
-					// pour permettre à l'app de fonctionner correctement, car la connection au compte n'est pas encore opérationelle à 100%
-					
-					// Cependant toutes ces autres routes devront OBLIGATOIREMENT être bloqué (par la suite) sans être connecté à son
-					// compte (il faut le jwt token dans la requette Http, et qu'il soit
-					// valide pour pouvoir lancer les autres requettes Http dans l'app Back Java)
-					
-					configRouteHttp.anyRequest().permitAll(); // temporaire uniquement
-				
-					// configRouteHttp.anyRequest().authenticated(); // à remplacer par cela obligatoirement.
 				}
 				
-					);
+					)
+			
+			// ajout du filtre monFiltreJwt, avant le filtre de Spring Security qui s'occupe de vérifier qui est connecté qui s'appel : UsernamePasswordAuthenticationFilter.class
+			.addFilterBefore(monFiltreJwt, UsernamePasswordAuthenticationFilter.class);
 		
 		
 		return reglesDeSecuritePourRequetesHttp.build();

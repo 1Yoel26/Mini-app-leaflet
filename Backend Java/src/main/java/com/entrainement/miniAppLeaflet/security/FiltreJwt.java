@@ -3,6 +3,9 @@ package com.entrainement.miniAppLeaflet.security;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.entrainement.miniAppLeaflet.service.ServiceJwtGenererEtValider;
@@ -12,68 +15,78 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-// Cette classe sert à créer un Filtre (pour valider le jwt reçu dans la requette HTTP)
+
+// Cette classe sert à créer un filtre (pour valider le jwt reçu dans la requette HTTP)
+
+
 // Ce filtre pourra ensuite être ajouter aux autres filtre de securité de filtreChain:
-// Si le jwt est validé, passe au filtre suivant avec : filterChain.doFilter(request, response)
-// sinon 
+// 		- Si le tokenJwt à bien été envoyé, et qu'il n'est pas valide bloque l'accès aux filtres suivant de Spring Security avec le non appel de doFilterChain() avec le return;
+// 		- Par contre, si le tokenJwt à été envoyé et est validé, ou bien si aucun tokenJwt n'a été envoyé, continue vers les filtres suivant de Spring Security.
+
+
+@Component
 public class FiltreJwt extends OncePerRequestFilter{
 
 	@Autowired
 	private ServiceJwtGenererEtValider serviceJwtGenererEtValider;
 	
 	@Override
-	public void doFilterInternal(
-			
-			HttpServletRequest requetteHttp,   // requetteHttp 
-			HttpServletResponse reponseHttpRenvoyer,  // reponseHttp renvoyer au filtre 
-			FilterChain chaineDeFiltre 
-			
-			) throws ServletException, IOException { 
+	protected void doFilterInternal( HttpServletRequest requetteHttp, HttpServletResponse reponseHttpRenvoyer,  FilterChain chaineDeFiltre ) throws ServletException, IOException { 
 		
-		// récupération du header dans la requette HTTP reçu par le backend Java:
-		String headerAutorisation = requetteHttp.getHeader("Authorization");
+		// récupération du Header de la requette http reçu 
 		
-		// verification si ce nom existe dans le header, et s'il commence bien par Bearer (qui indique que c'est avec un token qu'on teste l'authentification):
-		if(headerAutorisation != null && headerAutorisation.startsWith("Bearer ")) {
+		String headerAuthorization = requetteHttp.getHeader("Authorization");
+		
 			
-			// récupération du token dans la string : "Bearer tokenJwtAbcd1234"
-			String tokenJwt = headerAutorisation.substring(7);
+		// s'il n y ya pas une Authorization dans la requette Http reçu, continue vers les filtres suivant de Spring Security (comme pour la requtte public qui permet de créer son compte): 
+		if(headerAuthorization == null) {
+			chaineDeFiltre.doFilter(requetteHttp, reponseHttpRenvoyer);
+			return;
+		}
+		else if(!headerAuthorization.startsWith("Bearer ")) {
 			
-			// si le tokenJwt existe dans le headerAutorisation.substring(7):
-			if(tokenJwt != null) {
-				boolean jwtValide = serviceJwtGenererEtValider.validerJwt(tokenJwt);
+			reponseHttpRenvoyer.setStatus(401);
+			return;
+			
+		}
+		// S'il ya bien une Authorization, tentative de validation du tokenJwt
+		else {
+			
+			// récupération du tokenJwt envoyé dans le header
+			String tokenJwt = headerAuthorization.substring(7);
+			System.out.println(tokenJwt);
+			
+			// validation booleane du tokenJwt :
+			boolean jwtValideOuPas = serviceJwtGenererEtValider.validerJwt(tokenJwt);
+			
+			
+			// si le token est valide, crée l'utilisateur connecté et continue vers les filtres suivant de Spring Security:
+			if(jwtValideOuPas == true) {
+				
+				// récupération de l'email de l'utilisateur authentifié via son tokenJwt :
 				
 				
-				// si le tokenJwt est bien validé avec jwtValide = true, avec (signature du token validé + date non expiré)
-				// alors continue vers les autres filtres de sécurité de Spring Security:
-				if(jwtValide) { 
-					chaineDeFiltre.doFilter(requetteHttp, reponseHttpRenvoyer);
-				}
+				// Création d'un utilisateur pour Spring Security
+				UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken("emailDuToken", null);
 				
-				// si le tokenJwt n'est pas valide : 
-				// Bloquer l'accès au filtre de sécurité suivant en n'appelant pas la fonction doFiltreChain()
-				else {
-					// renvois une requette http avec erreur 401 (non authentifié)
-					reponseHttpRenvoyer.setStatus(HttpServletResponse.SC_UNAUTHORIZED);;
-					
-					// stop le programme ici sans continuer vers les autres filtres de sécurité de Spring Security:
-					return;
-				}
+				// Enregistrement de cette utilisateur connecté dans le Contexte de Spring Security pour cette requette Http uniquement (Stateless):
+				SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 				
+				
+				chaineDeFiltre.doFilter(requetteHttp, reponseHttpRenvoyer);
+				return;
 			}
 			
-		}
+			// sinon, si le tokenJwt n'est pas valide, bloquer l'accès aux filtres suivant de Spring Security, en n'appelant pas le fonction chaineDeFiltre.doFilter(requetteHttp, reponseHttpRenvoyer) :
+			else {
+				reponseHttpRenvoyer.setStatus(401);
+				return;
+			}
+			
+			}
 		
-		// si le header de la requette http reçu ne contient pas "authorization", 
-		// mais ne contient pas non plus de token jwt à valider : comme pour les requettes de l'api publique, notamment pour créer son compte.
-		// renvois vers les filtres suivant de Spring security, sans rien modifier dans la requete Http reçu:
-		else {
-			chaineDeFiltre.doFilter(requetteHttp, reponseHttpRenvoyer);
 		}
-		
-		
-				
-		}
-	}
+	
+}
 
 
