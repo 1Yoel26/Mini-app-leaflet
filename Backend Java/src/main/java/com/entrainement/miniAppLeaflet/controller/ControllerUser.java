@@ -1,6 +1,7 @@
 package com.entrainement.miniAppLeaflet.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,7 +34,7 @@ public class ControllerUser {
 	
 	
 	@PostMapping("/authentification")
-	String authentification(@RequestBody DtoUserAuthentification dtoUserAuthentification) {
+	ResponseEntity<String> authentification(@RequestBody DtoUserAuthentification dtoUserAuthentification) {
 		
 		String emailConnection = dtoUserAuthentification.getEmail();
 		String motDePasseConnection = dtoUserAuthentification.getMotDePasse();
@@ -41,7 +42,16 @@ public class ControllerUser {
 		String authentificationValide = serviceUser.connectionCompte(emailConnection, motDePasseConnection);
 	
 		// return null si l'email ou le mot de passe incorrect, et retourne le TokenJWT si l'authentification est valide:
-		return authentificationValide;
+		
+		if(authentificationValide != null) {
+			return ResponseEntity.status(200).body(authentificationValide);
+		}
+		
+		else {
+			return ResponseEntity.status(401).body(authentificationValide);
+		}
+		
+		
 	
 	}
 

@@ -76,7 +76,7 @@ export class Authentification implements OnInit {
 
             // stockage du tokenJwt dans le localstorage pour pouvoir le récupérer par la suite dans le interceptor.ts
             localStorage.setItem("tokenJwt", jwtRetourner);
-
+            
 
           }
 

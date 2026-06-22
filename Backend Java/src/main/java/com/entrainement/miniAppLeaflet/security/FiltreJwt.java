@@ -1,6 +1,7 @@
 package com.entrainement.miniAppLeaflet.security;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -59,7 +60,6 @@ public class FiltreJwt extends OncePerRequestFilter{
 			// validation booleane du tokenJwt :
 			boolean jwtValideOuPas = serviceJwtGenererEtValider.validerJwt(tokenJwt);
 			
-			
 			// si le token est valide, crée l'utilisateur connecté et continue vers les filtres suivant de Spring Security:
 			if(jwtValideOuPas == true) {
 				
@@ -67,7 +67,7 @@ public class FiltreJwt extends OncePerRequestFilter{
 				
 				
 				// Création d'un utilisateur pour Spring Security
-				UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken("emailDuToken", null);
+				UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken("emailDuToken", null, List.of());
 				
 				// Enregistrement de cette utilisateur connecté dans le Contexte de Spring Security pour cette requette Http uniquement (Stateless):
 				SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
