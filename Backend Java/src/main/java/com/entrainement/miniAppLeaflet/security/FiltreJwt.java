@@ -34,6 +34,23 @@ public class FiltreJwt extends OncePerRequestFilter{
 	@Override
 	protected void doFilterInternal( HttpServletRequest requetteHttp, HttpServletResponse reponseHttpRenvoyer,  FilterChain chaineDeFiltre ) throws ServletException, IOException { 
 		
+		// Si la page qui envois le tokenjwt est la page login ou creation de compte, autorise l'accès sans verifier le jwtToken car c'est .permitAll():
+		String debutDuCheminHttp = requetteHttp.getRequestURI();
+		
+		if(debutDuCheminHttp.startsWith("api-leaflet/user/")) {
+			System.out.println("dofiltrechain validé sans verifier si le jwt est valide, car page login ou creation de compte");
+			chaineDeFiltre.doFilter(requetteHttp, reponseHttpRenvoyer);
+			return;
+		}
+		
+		
+		
+		
+		// Si parcontre, c'est une page de l'app en dehors des pages pour se connecter ou créer un compte,
+		// verifie si le tokenJwt existe et est valide :
+		
+		
+		
 		// récupération du Header de la requette http reçu 
 		
 		String headerAuthorization = requetteHttp.getHeader("Authorization");
@@ -77,9 +94,10 @@ public class FiltreJwt extends OncePerRequestFilter{
 				return;
 			}
 			
-			// sinon, si le tokenJwt n'est pas valide, bloquer l'accès aux filtres suivant de Spring Security, en n'appelant pas le fonction chaineDeFiltre.doFilter(requetteHttp, reponseHttpRenvoyer) :
+			// sinon, si le tokenJwt existe, mais n'est pas valide, bloquer l'accès aux filtres suivant de Spring Security, en n'appelant pas le fonction chaineDeFiltre.doFilter(requetteHttp, reponseHttpRenvoyer) :
 			else {
 				reponseHttpRenvoyer.setStatus(401);
+				reponseHttpRenvoyer.getWriter().write("TokenJwt invalide");
 				return;
 			}
 			

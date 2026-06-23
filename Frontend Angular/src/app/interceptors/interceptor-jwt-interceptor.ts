@@ -1,12 +1,17 @@
 import { HttpInterceptorFn } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { catchError, throwError } from 'rxjs';
+import { ServiceAuthentification } from '../services/services-event/service-authentification';
 
 export const interceptorJwtInterceptor: HttpInterceptorFn = (req, next) => {
   
   // récupération du tokenJwt du localstorage :
   const tokenJwt: string | null = localStorage.getItem("tokenJwt");
 
-  //si le tokenJwt existe, et que ça n'est pas une requette de authentification ou de création de compte /user/ :
-  if(tokenJwt && !req.url.includes("/api-leaflet/user/") ){
+  const serviceAuthentification = inject(ServiceAuthentification);
+
+  //si le tokenJwt existe :
+  if(tokenJwt){
 
     //si le tokenJwt existe : modification de la requette http intercepté, avec le tokenJwt en plus dans le header :
     let copieRequeteHttpAvecTokenJwtEnPlus = req.clone({
@@ -15,8 +20,25 @@ export const interceptorJwtInterceptor: HttpInterceptorFn = (req, next) => {
       }
     });
 
+
     //puis renvois avec next() de la requette http intercepté vers le backend Java:
-    return next(copieRequeteHttpAvecTokenJwtEnPlus);
+    return next(copieRequeteHttpAvecTokenJwtEnPlus).pipe(
+
+      catchError( (erreur) => {
+        console.log("erreur du catchError : " + erreur.status);
+        console.log("erreur du catchError : " + erreur.error);
+
+        if(erreur.status === 401 && erreur.error === "Désolé le tokenJwt actuelle n'est plus valide"){
+          alert("TokenJwt expiré ou invalide")
+          serviceAuthentification.nextDeconnecter();
+        }
+
+        return throwError(()=> erreur);
+
+        
+      })
+      
+    );
      
   }
 

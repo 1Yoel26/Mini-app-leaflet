@@ -29,8 +29,17 @@ export class ServiceAuthentification {
 
   public nextDeconnecter():void{
 
+      localStorage.removeItem("tokenJwt");
+
       //localStorage.clear();
       this.behaviorSubject.next(false);
+
+  }
+
+
+  public estConnecteOuPas(): boolean{
+
+    return this.behaviorSubject.value;
 
   }
 

@@ -17,7 +17,7 @@ export const guestGuard: CanActivateFn = (route, state) => {
 
   // si l'utilisateur est connecté, donc avec son jwtToken dans le LocalStorage), 
   // redirige vers la page Dashboard, s'il va vers par exemple la page /authentification ou creation de compte, est retourne false :
-  router.navigate(['/dashboard']);
+  router.navigate(['']);
   return false;
 
 };

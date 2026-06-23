@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatToolbar } from '@angular/material/toolbar';
 import { RouterLink } from "@angular/router";
+import { ServiceAuthentification } from '../../services/services-event/service-authentification';
 
 
 @Component({
@@ -10,4 +11,9 @@ import { RouterLink } from "@angular/router";
   templateUrl: './menu.html',
   styleUrl: './menu.scss',
 })
-export class Menu {}
+export class Menu {
+
+  constructor(public serviceAuthentification: ServiceAuthentification){
+  }
+
+}
