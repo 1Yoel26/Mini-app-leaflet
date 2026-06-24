@@ -100,11 +100,8 @@ public class FiltreJwt extends OncePerRequestFilter{
 				reponseHttpRenvoyer.getWriter().write("TokenJwt invalide");
 				return;
 			}
-			
 			}
-		
 		}
-	
 }
 
 

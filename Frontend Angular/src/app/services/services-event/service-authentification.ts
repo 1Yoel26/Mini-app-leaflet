@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
@@ -11,7 +12,7 @@ export class ServiceAuthentification {
   public behaviorSubjectObservable: Observable<boolean> = this.behaviorSubject.asObservable();
 
 
-  constructor(){
+  constructor(private router: Router){
     let tokenJwt: string | null = localStorage.getItem("tokenJwt");
 
     if(tokenJwt){
@@ -23,6 +24,7 @@ export class ServiceAuthentification {
   public nextConnecter():void{
 
       this.behaviorSubject.next(true);
+      this.router.navigate(['']);
 
   }
 
@@ -33,6 +35,8 @@ export class ServiceAuthentification {
 
       //localStorage.clear();
       this.behaviorSubject.next(false);
+
+      this.router.navigate(['/authentification']);
 
   }
 

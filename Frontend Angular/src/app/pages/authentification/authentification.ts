@@ -7,6 +7,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { UserConnectionCompte } from '../../interfaces/user-connection-compte';
 import { ServiceUser } from '../../services/services-api/service-user';
+import { Router } from '@angular/router';
+import { ServiceAuthentification } from '../../services/services-event/service-authentification';
 
 
 @Component({
@@ -26,11 +28,12 @@ import { ServiceUser } from '../../services/services-api/service-user';
 export class Authentification implements OnInit {
 
   constructor(
-    private serviceUser: ServiceUser
+    private serviceUser: ServiceUser,
+    private serviceAuthentification: ServiceAuthentification,
+    private router: Router
   ){}
 
   public formGroup!: FormGroup;
-
 
   ngOnInit(): void {
 
@@ -72,11 +75,10 @@ export class Authentification implements OnInit {
           // si l'appel Http retourne une string avec 3 points, (cela signifie que la connection à réussi car la structure d'un jwt est : "header.payload.signature" )
           if(jwtRetourner.split(".").length == 3){
 
-            alert("Bravo ! Authentification réussi! \n" + jwtRetourner);
-
             // stockage du tokenJwt dans le localstorage pour pouvoir le récupérer par la suite dans le interceptor.ts
             localStorage.setItem("tokenJwt", jwtRetourner);
-            
+
+            this.serviceAuthentification.nextConnecter();
 
           }
 

@@ -1,23 +1,36 @@
 <mat-toolbar>
 
-    <a mat-button routerLink="">
+    
+    @if (connecteOuPas() == true) {
+
+        <a mat-button routerLink="">
         Map
-    </a>
+        </a>
 
-    <a mat-button routerLink="dashboard">
-        Dashboard
-    </a>
+        <a mat-button routerLink="dashboard">
+            Dashboard
+        </a>
 
-    <a mat-button routerLink="authentification">
-        Me connecter
-    </a>
+         <a mat-button (click)="deconnecter()">
+            Me déconnecter
+        </a>
 
-    <a mat-button routerLink="creation-compte">
-        Créer mon compte
-    </a>
 
-    <a mat-button (click)="serviceAuthentification.nextDeconnecter()">
-        Me déconnecter
-    </a>
+    }
 
+    @else {
+
+        <a mat-button routerLink="authentification">
+            Me connecter
+        </a>
+
+        <a mat-button routerLink="creation-compte">
+            Créer mon compte
+        </a>
+
+    }
+
+   
+
+   
 </mat-toolbar>

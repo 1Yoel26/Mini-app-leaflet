@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatToolbar } from '@angular/material/toolbar';
-import { RouterLink } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 import { ServiceAuthentification } from '../../services/services-event/service-authentification';
 
 
@@ -13,7 +13,18 @@ import { ServiceAuthentification } from '../../services/services-event/service-a
 })
 export class Menu {
 
-  constructor(public serviceAuthentification: ServiceAuthentification){
+  constructor(
+    private serviceAuthentification: ServiceAuthentification,
+    private router: Router
+  ){
+  }
+
+  deconnecter(): void{
+    this.serviceAuthentification.nextDeconnecter();
+  }
+
+  connecteOuPas(): boolean{
+    return this.serviceAuthentification.estConnecteOuPas();
   }
 
 }

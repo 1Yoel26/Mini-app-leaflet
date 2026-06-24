@@ -28,7 +28,7 @@ export const interceptorJwtInterceptor: HttpInterceptorFn = (req, next) => {
         console.log("erreur du catchError : " + erreur.status);
         console.log("erreur du catchError : " + erreur.error);
 
-        if(erreur.status === 401 && erreur.error === "Désolé le tokenJwt actuelle n'est plus valide"){
+        if(erreur.status === 401 && erreur.error === "TokenJwt invalide"){
           alert("TokenJwt expiré ou invalide")
           serviceAuthentification.nextDeconnecter();
         }
